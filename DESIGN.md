@@ -1,12 +1,12 @@
-# Muzi Creator Animal Island UI Lab
+# Azu Creator Animal Island UI Lab
 
-This Lab is an isolated visual and interaction harness for Muzi Creator. It supplies no credentials and authorizes no publishing, synchronization, or archive action.
+This Lab is an isolated visual and interaction harness for Azu Creator. It supplies no credentials and authorizes no publishing, synchronization, or archive action.
 
 ## Visual system
 
-Animal Island defaults remain scoped to Muzi roots and portals. The workbench bundles its fixed appearance, fonts and artwork, retaining host light/dark mode.
+Animal Island defaults remain scoped to Azu roots and portals. The workbench bundles its fixed appearance, fonts and artwork, retaining host light/dark mode.
 
-The package is `animal-island-ui@1.6.0`, licensed CC BY-NC 4.0 by guokaigdg. Muzi Creator code remains MIT; `NOTICE` is the attribution record.
+The package is `animal-island-ui@1.6.0`, licensed CC BY-NC 4.0 by guokaigdg. Azu Creator code remains MIT; `NOTICE` is the attribution record.
 
 Workspace header controls have transparent resting backgrounds, subtle hover fills, and visible keyboard focus. Host tooltips use a fixed cream background (`#FFF8EA`), brown text (`#694633`), and a faint brown border in both light and dark modes. These appearance rules apply only while the workbench client is active. Tooltip rules exclude plugin-owned surfaces and portals, with a scoped exception for host tooltips rendered inside the sidebar's `sidebar.workspaces` slot.
 

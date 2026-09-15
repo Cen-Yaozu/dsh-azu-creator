@@ -1,14 +1,14 @@
 import { SlotCore } from "@deepseek-ai/dsh-client-ui-slots";
 import { describe, expect, it } from "vitest";
 
-import { MUZI_ICON_SRC } from "../src/client/assets/muziIcon.ts";
+import { AZU_ICON_SRC } from "../src/client/assets/azuIcon.ts";
 import {
   MuziHeroBrandMark,
   registerMuziHeroBrandMark,
   type CompatibleHeroBrandSlots,
 } from "../src/client/heroBrand.tsx";
 import { en, zh } from "../src/client/locales.ts";
-import { MzBrand } from "../src/client/sidebar/MzBrand.tsx";
+import { AzBrand } from "../src/client/sidebar/AzBrand.tsx";
 
 function registerSlots(): SlotCore {
   const slots = new SlotCore();
@@ -33,7 +33,7 @@ describe("Muzi brand", () => {
 
     expect(mark.type).toBe("img");
     expect(mark.props).toMatchObject({
-      src: MUZI_ICON_SRC,
+      src: AZU_ICON_SRC,
       width: 34,
       height: 34,
       alt: "",
@@ -44,13 +44,15 @@ describe("Muzi brand", () => {
   });
 
   it("renders the approved phrase inside plugin-owned sidebar chrome", () => {
-    expect(zh["brand.tagline"]).toBe("木子在生长");
-    expect(en["brand.tagline"]).toBe("Muzi is growing");
+    expect(zh["brand.name"]).toBe("Azu 工作台");
+    expect(zh["brand.tagline"]).toBe("Azu 在生长");
+    expect(en["brand.name"]).toBe("Azu 工作台");
+    expect(en["brand.tagline"]).toBe("Azu is growing");
 
-    const brand = MzBrand({ tagline: en["brand.tagline"] });
+    const brand = AzBrand({ tagline: en["brand.tagline"] });
     const copy = brand.props.children[1];
-    expect(copy.props.children[0].props.children).toBe("Muzi Creator");
-    expect(copy.props.children[1].props.children).toBe("Muzi is growing");
+    expect(copy.props.children[0].props.children).toBe("Azu 工作台");
+    expect(copy.props.children[1].props.children).toBe("Azu is growing");
   });
 
   it("registers and releases the existing Hero mark occupant", () => {

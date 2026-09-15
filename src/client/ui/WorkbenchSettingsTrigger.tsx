@@ -8,7 +8,7 @@ declare module "@deepseek-ai/dsh-client-ui-slots" {
 
 /** Settings trigger content; the host retains the button and dialog behavior. */
 export function WorkbenchSettingsTrigger({ wide, t }: { wide: boolean; t: (key: "settings.trigger") => string }) {
-  return <span data-plugin="dsh-muzi-creator" className="muziIconLabel">
+  return <span data-plugin="dsh-azu-creator" className="muziIconLabel">
     <WorkbenchIcon name="settings" purpose="navigation" />
     <span className={wide ? undefined : "muziIconSrOnly"}>{t("settings.trigger")}</span>
   </span>;

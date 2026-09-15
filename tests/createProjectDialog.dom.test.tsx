@@ -42,7 +42,7 @@ describe("CreateProjectDialog portal behavior", () => {
     const dialog = screen.getByRole("dialog", { name: "新增内容" });
     await waitFor(() => {
       expect(dialog.parentElement).not.toBeNull();
-      expect(dialog.dataset.plugin).toBe("dsh-muzi-creator");
+      expect(dialog.dataset.plugin).toBe("dsh-azu-creator");
       expect(dialog.dataset.surface).toBe("muzi-create-dialog");
       expect((dialog as HTMLDialogElement).open).toBe(true);
     });

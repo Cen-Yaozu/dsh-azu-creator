@@ -47,17 +47,17 @@ function git(repository: string, ...args: string[]) {
 }
 
 function createRepository() {
-  const repository = mkdtempSync(join(tmpdir(), "dsh-muzi-creator-release-"));
+  const repository = mkdtempSync(join(tmpdir(), "dsh-azu-creator-release-"));
   const files = new Map<string, string>([
     ["package.json", JSON.stringify({
-      name: "dsh-muzi-creator",
+      name: "dsh-azu-creator",
       version: "0.1.0",
       repository: {
         type: "git",
-        url: "git+https://github.com/MuziGeek/dsh-muzi-creator.git",
+        url: "git+https://github.com/Cen-Yaozu/dsh-azu-creator.git",
       },
-      bugs: { url: "https://github.com/MuziGeek/dsh-muzi-creator/issues" },
-      homepage: "https://github.com/MuziGeek/dsh-muzi-creator#readme",
+      bugs: { url: "https://github.com/Cen-Yaozu/dsh-azu-creator/issues" },
+      homepage: "https://github.com/Cen-Yaozu/dsh-azu-creator#readme",
       packageManager: "pnpm@10.16.1",
       main: "./lib/index.js",
       exports: { ".": "./lib/index.js" },

@@ -1,7 +1,7 @@
 import { deleteZh, deleteEn } from "./deleteCopy.ts";
 import { overviewZh, overviewEn } from "./overviewCopy.ts";
 import { githubZh, githubEn } from "./trellisGithubCopy.ts";
-export const NS = "dsh.mz.creator";
+export const NS = "dsh.azu.creator";
 
 export const zh = {
   "workspaceChrome.search": "搜索",
@@ -94,7 +94,8 @@ export const zh = {
   "tab.inspiration": "灵感",
   "tab.knowledge": "知识",
   "tab.projects": "项目",
-  "brand.tagline": "木子在生长",
+  "brand.name": "Azu 工作台",
+  "brand.tagline": "Azu 在生长",
   "hot.title": "每日热点",
   "hot.refresh": "刷新",
   "hot.refreshing": "刷新中",
@@ -447,7 +448,8 @@ export const en = {
   "tab.inspiration": "Inspiration",
   "tab.knowledge": "Knowledge",
   "tab.projects": "Projects",
-  "brand.tagline": "Muzi is growing",
+  "brand.name": "Azu 工作台",
+  "brand.tagline": "Azu is growing",
   "hot.title": "Daily hot",
   "hot.refresh": "Refresh",
   "hot.refreshing": "Refreshing",

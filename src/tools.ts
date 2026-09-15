@@ -29,8 +29,15 @@ function present(title: string, rawInput: unknown): { card: "generic"; title: st
 const JSON_VALUE = { type: "json" } as const;
 
 export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorService): void {
-  ctx.tools.register(defineTool({
-    name: "mz_creator_guide",
+  const register = (tool: ToolDefinition) => {
+    ctx.tools.register(tool);
+    if (tool.name.startsWith("azu_")) {
+      ctx.tools.register({ ...tool, name: tool.name.replace(/^azu_/, "mz_") });
+    }
+  };
+
+  register(defineTool({
+    name: "azu_creator_guide",
     description:
       "Self-bootstrap guide for this plugin. Call this when the user asks what this plugin does, "
       + "how to use it, or when you are unsure which step comes next. "
@@ -50,8 +57,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     execute: (_args, exec) => service.getCreatorGuide(signalOf(exec)).then(asJson),
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_script_rules",
+  register(defineTool({
+    name: "azu_script_rules",
     description:
       "Read or update the creator's script rules (persona): tone, structure, audience, and taboos "
       + "that every script.md must follow. Omit text to read. Send text to save. Empty text clears. "
@@ -77,8 +84,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_creator_setup",
+  register(defineTool({
+    name: "azu_creator_setup",
     description:
       "Inspect the creator workspace, optional local capabilities, credential status, and current configuration. "
       + "Omit fields for a read-only diagnosis. Proposed changes are previewed unless apply=true. "
@@ -117,8 +124,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_create_content",
+  register(defineTool({
+    name: "azu_create_content",
     description:
       "Create an empty dated library folder named YYYY-MM-DD_title using today's date and a readable title.",
     parameters: {
@@ -142,8 +149,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_update_content",
+  register(defineTool({
+    name: "azu_update_content",
     description:
       "Write overlay-only marks for one episode: readyToRecord, bind a production project or Screen Studio project, "
       + "or set a platform publish status. To change topic.md or script.md, write those files "
@@ -159,51 +166,49 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
       publishPlatform: {
         type: "string",
         enum: PUBLISH_PLATFORMS,
-        description: "Platform to mark. Pair with publishStatus.",
+        description: "Platform to update status for.",
       },
       publishStatus: {
         type: "string",
         enum: ["unpublished", "draft", "published"],
-        description: "Per-platform publish mark stored in the plugin overlay.",
+        description: "New status.",
       },
-      publishUrl: { type: "string", description: "Optional live URL when status is published." },
+      publishUrl: { type: "string", description: "Live URL if published." },
     },
     output: {
       schema: JSON_VALUE,
       render: (_args, value) => {
-        const record = value as { title?: string; id?: string };
-        return compactText("Updated", record.title || record.id || "");
+        const item = value as { title?: string; readyToRecord?: boolean };
+        const state = item.readyToRecord ? "readyToRecord" : "saved";
+        return compactText("Update content", `${item.title || "item"}: ${state}`);
       },
     },
     presentCall: (args) => present("Update content", args),
     async execute(args, exec) {
       const signal = signalOf(exec);
       if (args.id === "") throw new Error("id is required");
-      if (args.productionProjectPath !== undefined && args.studioPath !== undefined) {
-        throw new Error("productionProjectPath and studioPath cannot be sent together");
+      if (args.studioPath !== undefined && args.productionProjectPath !== undefined) {
+        throw new Error("studioPath and productionProjectPath cannot be combined");
       }
-      if (args.readyToRecord !== undefined) {
+      if (typeof args.readyToRecord === "boolean") {
         await service.setContentStage({ id: args.id, readyToRecord: args.readyToRecord }, signal);
       }
       if (args.productionProjectPath !== undefined) {
-        if (args.productionProjectPath !== null && typeof args.productionProjectPath !== "string") {
-          throw new Error("productionProjectPath must be a string or null");
-        }
         await service.bindProductionProject({ id: args.id, path: args.productionProjectPath }, signal);
       }
-      if (args.studioPath !== undefined && args.studioPath !== "") {
+      if (typeof args.studioPath === "string") {
         await service.bindStudio({ id: args.id, path: args.studioPath }, signal);
       }
-      const hasPlatform = args.publishPlatform !== undefined;
-      const hasStatus = args.publishStatus !== undefined;
-      if (hasPlatform !== hasStatus) {
-        throw new Error("publishPlatform and publishStatus must be sent together");
-      }
-      if (isPublishPlatform(args.publishPlatform) && isPublishMark(args.publishStatus)) {
+      if (args.publishPlatform !== undefined && args.publishStatus !== undefined) {
+        if (!isPublishPlatform(args.publishPlatform)) throw new Error("invalid publishPlatform");
+        if (!isPublishMark(args.publishStatus)) throw new Error("invalid publishStatus");
         await service.setPublish(
-          args.publishUrl === undefined
-            ? { id: args.id, platform: args.publishPlatform, status: args.publishStatus }
-            : { id: args.id, platform: args.publishPlatform, status: args.publishStatus, url: args.publishUrl },
+          {
+            id: args.id,
+            platform: args.publishPlatform,
+            status: args.publishStatus,
+            ...(typeof args.publishUrl === "string" ? { url: args.publishUrl } : {}),
+          },
           signal,
         );
       }
@@ -211,8 +216,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_creator_profile",
+  register(defineTool({
+    name: "azu_creator_profile",
     description:
       "Read or update the list of enabled publishing platforms. "
       + "Omit the list to read. Send the complete list to replace it.",
@@ -239,8 +244,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_organize_library",
+  register(defineTool({
+    name: "azu_organize_library",
     description:
       "Preview or apply library folder cleanup to YYYY-MM-DD_readable title. "
       + "Adds a date from the recording/folder time when missing, and turns hyphens/underscores in titles into spaces. "
@@ -268,8 +273,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     }, signalOf(exec))),
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_sync_publish",
+  register(defineTool({
+    name: "azu_sync_publish",
     description:
       "Sync published titles, URLs, and counts from logged-in creator dashboards. "
       + "Pass id to update one episode only and stop paging once that title is found. "
@@ -317,8 +322,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_open_production_project_folder",
+  register(defineTool({
+    name: "azu_open_production_project_folder",
     description:
       "Reveal the directory containing the bound production project. This never launches the project file or editor.",
     parameters: {
@@ -338,8 +343,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_open_studio",
+  register(defineTool({
+    name: "azu_open_studio",
     description:
       "Open the bound Screen Studio project for this episode so the user can review and export.",
     parameters: {
@@ -359,8 +364,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_wait_export",
+  register(defineTool({
+    name: "azu_wait_export",
     description:
       "Start watching the episode folder for a finished MP4/MOV (Screen Studio export) and return immediately. "
       + "When the file is stable, the folder has the video and waitingForExport clears. "
@@ -396,8 +401,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_open_subtitle_preview",
+  register(defineTool({
+    name: "azu_open_subtitle_preview",
     description:
       "Open the oil-subtitle preview editor in the browser for this episode (video + editable cues).",
     parameters: {
@@ -421,11 +426,11 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_burn_subtitles",
+  register(defineTool({
+    name: "azu_burn_subtitles",
     description:
       "Burn the current oil-subtitle draft onto the raw video after the user has previewed and confirmed it. "
-      + "Do not call this before mz_open_subtitle_preview (or the preview opened by mz_generate_subtitles). "
+      + "Do not call this before azu_open_subtitle_preview (or the preview opened by azu_generate_subtitles). "
       + "Returns immediately. When finished, the episode folder has a *_subtitled.mp4.",
     parameters: {
       id: { type: "string", required: true, description: "Folder id." },
@@ -444,11 +449,11 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_generate_subtitles",
+  register(defineTool({
+    name: "azu_generate_subtitles",
     description:
       "Run the oil-subtitle draft workflow: transcribe, auto-review, and lay out captions. "
-      + "Does not burn. When it finishes, a preview editor opens; wait for the user to proofread, then call mz_burn_subtitles. "
+      + "Does not burn. When it finishes, a preview editor opens; wait for the user to proofread, then call azu_burn_subtitles. "
       + "Requires DASHSCOPE_API_KEY in Settings → Plugins → 内容工作台. "
       + "Returns immediately. Completion is subtitle-transcript.json / subtitle-manifest.json, not *_subtitled.mp4.",
     parameters: {
@@ -468,8 +473,8 @@ export function registerCreatorTools(ctx: ToolsContext, service: MzCreatorServic
     },
   }));
 
-  ctx.tools.register(defineTool({
-    name: "mz_generate_cover",
+  register(defineTool({
+    name: "azu_generate_cover",
     description:
       "Generate 3x4 / 4x3 / 16x9 covers with oil-cover. "
       + "Extract a cover title first from the episode script or subtitles (oil-cover rule: do not leave this to the image model). "

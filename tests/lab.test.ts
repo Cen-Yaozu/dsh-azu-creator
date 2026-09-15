@@ -111,9 +111,9 @@ describe("isolated UI Lab", () => {
     expect(manifest.dsh.profile.bundles).toEqual([
       "@deepseek-ai/dsh-base",
       "@deepseek-ai/dsh-web-app",
-      "dsh-muzi-creator",
+      "dsh-azu-creator",
     ]);
-    expect(manifest.dependencies["dsh-muzi-creator"]).toBe(`link:${paths.root.replaceAll("\\", "/")}`);
+    expect(manifest.dependencies["dsh-azu-creator"]).toBe(`link:${paths.root.replaceAll("\\", "/")}`);
     expect(await realpath(paths.pluginLink)).toBe(await realpath(paths.root));
     expect(await realpath(paths.desktopPluginLink)).toBe(await realpath(paths.root));
     expect(JSON.parse(await readFile(paths.desktopProfileSelection, "utf8"))).toEqual({
@@ -130,7 +130,7 @@ describe("isolated UI Lab", () => {
       expect((await lstat(directory)).isDirectory()).toBe(true);
       expect((await lstat(directory)).isSymbolicLink()).toBe(false);
     }
-    expect(patch).toContain("- id: dsh-muzi-creator");
+    expect(patch).toContain("- id: dsh-azu-creator");
     expect(patch).toContain("externalActionsEnabled: false");
     expect(config.credentials).toEqual({});
     expect(config.enabledPublishTargets).toEqual([]);
@@ -453,7 +453,7 @@ describe("isolated UI Lab", () => {
 
   it("prepares a local packed acceptance without installing or starting Desktop", async () => {
     const { paths } = await writeLabConfig(repositoryRoot);
-    const packageArchive = join(paths.packageStaging, "dsh-muzi-creator-0.1.10.tgz");
+    const packageArchive = join(paths.packageStaging, "dsh-azu-creator-0.1.10.tgz");
     await writeFile(packageArchive, "fixture\n", "utf8");
 
     await expect(prepareLocalTgzAcceptance({ repositoryRoot, tgz: packageArchive })).resolves.toEqual({
@@ -475,13 +475,13 @@ describe("isolated UI Lab", () => {
     const islandCss = await readFile(join(sourceRoot, "src", "client", "IslandWorkbench.css"), "utf8");
     const heroBrand = await readFile(join(sourceRoot, "src", "client", "heroBrand.tsx"), "utf8");
     const packageManifest = JSON.parse(await readFile(join(sourceRoot, "package.json"), "utf8"));
-    const ownedSurfaces = contents.filter(({ text }) => text.includes('data-plugin="dsh-muzi-creator"'));
+    const ownedSurfaces = contents.filter(({ text }) => text.includes('data-plugin="dsh-azu-creator"'));
 
     expect(styleImports).toEqual([join(sourceRoot, "src", "client", "index.tsx")]);
     expect(deepImports).toEqual([]);
-    expect(pluginCss).toContain('const PLUGIN_ID = "dsh-muzi-creator"');
+    expect(pluginCss).toContain('const PLUGIN_ID = "dsh-azu-creator"');
     expect(islandCss).not.toContain('[data-slot="conversation"]');
-    expect(heroBrand).toContain('data-plugin="dsh-muzi-creator"');
+    expect(heroBrand).toContain('data-plugin="dsh-azu-creator"');
     expect(packageManifest.files).toContain("DESIGN.md");
     expect(ownedSurfaces.length).toBeGreaterThan(0);
   });

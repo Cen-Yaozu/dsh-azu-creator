@@ -6,10 +6,10 @@ import { defineConfig } from "tsdown";
 
 import { scopeAnimalStyles } from "./scripts/scope-animal-styles.ts";
 
-const PLUGIN_ID = "dsh-muzi-creator";
-const CSS_PREFIX = "\0dsh-muzi-creator-css:";
+const PLUGIN_ID = "dsh-azu-creator";
+const CSS_PREFIX = "\0dsh-azu-creator-css:";
 const CSS_SUFFIX = ".mjs";
-const ASSET_PREFIX = "\0dsh-muzi-creator-asset:";
+const ASSET_PREFIX = "\0dsh-azu-creator-asset:";
 const ASSET_SUFFIX = ".mjs";
 const ANIMAL_ISLAND_STYLE = "animal-island-ui/style";
 const ANIMAL_ISLAND_CSS = resolve(
@@ -53,7 +53,7 @@ async function inlineCssAssets(css: string, cssFile: string): Promise<string> {
 
 function inlineAssetPlugin() {
   return {
-    name: "dsh-muzi-creator-inline-asset",
+    name: "dsh-azu-creator-inline-asset",
     resolveId(source: string, importer?: string) {
       if (importer === undefined || !CSS_ASSET_MIME.has(extname(source).toLowerCase())) return null;
       return `${ASSET_PREFIX}${resolve(dirname(importer), source)}${ASSET_SUFFIX}`;
@@ -71,7 +71,7 @@ function inlineAssetPlugin() {
 
 function inlineCssPlugin() {
   return {
-    name: "dsh-muzi-creator-inline-css",
+    name: "dsh-azu-creator-inline-css",
     resolveId(source: string, importer?: string) {
       if (source === ANIMAL_ISLAND_STYLE) return `${CSS_PREFIX}${ANIMAL_ISLAND_CSS}${CSS_SUFFIX}`;
       if (!source.endsWith(".css")) return null;
@@ -84,6 +84,8 @@ function inlineCssPlugin() {
       const file = id.slice(CSS_PREFIX.length, -CSS_SUFFIX.length);
       let css = await inlineCssAssets(await readFile(file, "utf8"), file);
       if (file === ANIMAL_ISLAND_CSS) css = scopeAnimalStyles(css);
+      css = css.replaceAll('data-plugin="dsh-muzi-creator"', 'data-plugin="dsh-azu-creator"')
+        .replaceAll('data-plugin-modal="dsh-muzi-creator"', 'data-plugin-modal="dsh-azu-creator"');
       const tagId = `${PLUGIN_ID}/${basename(file)}`;
       const registry = resolve(dirname(fileURLToPath(import.meta.url)), "src/client/pluginCss.ts");
       return [

@@ -8,3 +8,5 @@ design-qa.md
 design-qa-assets/
 .lab/
 .impeccable/mocks/*.png
+dist/
+

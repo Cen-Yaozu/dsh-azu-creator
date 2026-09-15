@@ -19,7 +19,7 @@ export function DeleteCardButton({ title, onDelete, disabled = false, t = (key) 
   useEffect(() => {
     const dialog = body.current?.closest<HTMLElement>('[role="dialog"]');
     if (!dialog) return;
-    dialog.dataset.pluginModal = "dsh-muzi-creator";
+    dialog.dataset.pluginModal = "dsh-azu-creator";
     return () => { delete dialog.dataset.pluginModal; };
   }, [open]);
   const text = (key: keyof typeof deleteZh): string => {
@@ -50,7 +50,7 @@ export function DeleteCardButton({ title, onDelete, disabled = false, t = (key) 
       typewriter={false}
       maskClosable={!busy}
       onClose={() => { if (!pending.current) setOpen(false); }}
-      footer={<div data-plugin-modal="dsh-muzi-creator" className="cardDeleteModalActions">
+      footer={<div data-plugin-modal="dsh-azu-creator" className="cardDeleteModalActions">
         <IslandButton disabled={busy} onClick={() => { if (!pending.current) setOpen(false); }}>
           {text("cardDelete.cancel")}
         </IslandButton>
@@ -60,7 +60,7 @@ export function DeleteCardButton({ title, onDelete, disabled = false, t = (key) 
         </IslandButton>
       </div>}
     >
-      <div ref={body} data-plugin-modal="dsh-muzi-creator" className="cardDeleteModalBody" aria-busy={busy}>
+      <div ref={body} data-plugin-modal="dsh-azu-creator" className="cardDeleteModalBody" aria-busy={busy}>
         <p className="cardDeleteModalTitle">{title}</p>
         <p className="cardDeleteModalHint">{text("cardDelete.keepFiles")}</p>
         {error !== null && <p className="cardDeleteModalError" role="alert">{error}</p>}

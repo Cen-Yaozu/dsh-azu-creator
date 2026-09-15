@@ -8,11 +8,11 @@ web
 
 ## Users
 
-Muzi is the primary user. The workbench is used locally to move between agent conversations, external signals, content production, personal knowledge, and active Git plus Trellis projects.
+Azu is the primary user. The workbench is used locally to move between agent conversations, external signals, content production, personal knowledge, and active Git plus Trellis projects.
 
 ## Product Purpose
 
-Muzi Creator keeps the information needed for personal knowledge work and content production in one local-first workspace. Success means each feature has a useful central overview and detail path while active Agent work continues safely in the background.
+Azu Creator keeps the information needed for personal knowledge work and content production in one local-first workspace. Success means each feature has a useful central overview and detail path while active Agent work continues safely in the background.
 
 ## Positioning
 
@@ -38,7 +38,7 @@ The plugin runs inside the DSH web client. It reads Creator Studio data, Muzi At
 
 ## Brand Commitments
 
-The product name is Muzi Creator. The workbench uses the existing Muzi avatar and a restrained Animal Island visual language built from warm earth tones, rounded controls, clear focus states, and compact task-oriented surfaces. Chinese and English interfaces are both supported.
+The product name is Azu Creator. The workbench uses the Azu creator workspace branding and a restrained Animal Island visual language built from warm earth tones, rounded controls, clear focus states, and compact task-oriented surfaces. Chinese and English interfaces are both supported.
 
 ## Evidence on Hand
 

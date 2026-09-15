@@ -21,10 +21,10 @@ import {
 } from "../src/config.ts";
 
 describe("portable config defaults", () => {
-  it("uses Creator Studio on Windows and a Muzi Creator media root elsewhere", () => {
-    expect(defaultLibraryRoot("darwin")).toBe(join(homedir(), "Movies", "Muzi Creator"));
-    expect(defaultLibraryRoot("win32")).toBe(join("D:\\Muzi\\Workspace\\creator-studio", "10-active"));
-    expect(defaultLibraryRoot("linux")).toBe(join(homedir(), "Videos", "Muzi Creator"));
+  it("uses Creator Studio on Windows and an Azu Creator media root elsewhere", () => {
+    expect(defaultLibraryRoot("darwin")).toBe(join(homedir(), "Movies", "Azu Creator"));
+    expect(defaultLibraryRoot("win32")).toBe(join("D:\\Azu\\Workspace\\creator-studio", "10-active"));
+    expect(defaultLibraryRoot("linux")).toBe(join(homedir(), "Videos", "Azu Creator"));
   });
 
   it("uses the local Git collection as the Windows Trellis project root", () => {
@@ -34,9 +34,9 @@ describe("portable config defaults", () => {
       .toBe(defaultTrellisProjectsRoot());
   });
 
-  it("uses the Muzi data directory for a fresh installation", () => {
-    const home = mkdtempSync(join(tmpdir(), "dsh-mz-data-home-"));
-    expect(defaultDataDir(home)).toBe(join(home, ".dsh-mz-creator"));
+  it("uses the Azu data directory for a fresh installation", () => {
+    const home = mkdtempSync(join(tmpdir(), "dsh-azu-data-home-"));
+    expect(defaultDataDir(home)).toBe(join(home, ".dsh-azu-creator"));
     expect(resolveDataDir({ dataDir: "" }, home)).toBe(defaultDataDir(home));
   });
 

@@ -1,6 +1,6 @@
 /* Hallmark · macrostructure: Central detail · tone: warm precise · anchor hue: leaf */
 
-[data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] {
+[data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] {
   --muzi-surface: var(--muzi-island-paper);
   --muzi-surface-soft: var(--muzi-island-canvas);
   --muzi-surface-muted: var(--muzi-island-sidebar);
@@ -19,7 +19,7 @@
   box-sizing: border-box;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop {
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorTop {
   display: flex;
   height: 56px;
   flex: none;
@@ -30,14 +30,14 @@
   border-bottom: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop > div {
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorTop > div {
   display: flex;
   min-width: 0;
   align-items: center;
   gap: 8px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop > div span {
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorTop > div span {
   overflow: hidden;
   font-size: var(--muzi-type-card-title-size, 1rem);
   line-height: var(--muzi-type-card-title-line, 1.5rem);
@@ -47,16 +47,16 @@
   white-space: nowrap;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop > button { flex: none; }
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorTop > button { flex: none; }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop > button:focus-visible,
-[data-plugin="dsh-muzi-creator"] .dailyHotSourcesToggle:focus-visible,
-[data-plugin="dsh-muzi-creator"] .dailyHotLinks a:focus-visible {
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorTop > button:focus-visible,
+[data-plugin="dsh-azu-creator"] .dailyHotSourcesToggle:focus-visible,
+[data-plugin="dsh-azu-creator"] .dailyHotLinks a:focus-visible {
   outline: 3px solid var(--muzi-island-focus);
   outline-offset: 2px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotInspectorScroll {
+[data-plugin="dsh-azu-creator"] .dailyHotInspectorScroll {
   flex: 1;
   min-height: 0;
   padding: 0 24px 48px;
@@ -65,7 +65,7 @@
   scrollbar-gutter: stable;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDetailLayout {
+[data-plugin="dsh-azu-creator"] .dailyHotDetailLayout {
   display: grid;
   width: 100%;
   max-width: 760px;
@@ -73,18 +73,18 @@
   margin: 0 auto;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotArticle {
+[data-plugin="dsh-azu-creator"] .dailyHotArticle {
   min-width: 0;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHero {
+[data-plugin="dsh-azu-creator"] .dailyHotHero {
   display: grid;
   gap: 12px;
   padding: 32px 0 28px;
   border-bottom: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHeroMeta {
+[data-plugin="dsh-azu-creator"] .dailyHotHeroMeta {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -93,12 +93,12 @@
   line-height: var(--muzi-type-support-line, 1.125rem);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHeroMeta > span {
+[data-plugin="dsh-azu-creator"] .dailyHotHeroMeta > span {
   max-width: 100%;
 }
 
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHero h1 {
+[data-plugin="dsh-azu-creator"] .dailyHotHero h1 {
   max-width: 28ch;
   margin: 0;
   overflow-wrap: anywhere;
@@ -109,7 +109,7 @@
   text-wrap: balance;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHero > p {
+[data-plugin="dsh-azu-creator"] .dailyHotHero > p {
   max-width: 68ch;
   margin: 0;
   color: var(--muzi-island-text-soft);
@@ -118,19 +118,19 @@
   text-wrap: pretty;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDomains {
+[data-plugin="dsh-azu-creator"] .dailyHotDomains {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDomains span {
+[data-plugin="dsh-azu-creator"] .dailyHotDomains span {
   color: var(--muzi-island-text-soft);
   font-size: var(--muzi-type-support-size, 0.75rem);
   line-height: var(--muzi-type-support-line, 1.125rem);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLatest {
+[data-plugin="dsh-azu-creator"] .dailyHotLatest {
   display: grid;
   gap: 7px;
   margin-top: 24px;
@@ -140,9 +140,9 @@
   background: var(--muzi-island-leaf-soft);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLatest h2,
-[data-plugin="dsh-muzi-creator"] .dailyHotSummary h2,
-[data-plugin="dsh-muzi-creator"] .dailyHotEvidenceGroup h2 {
+[data-plugin="dsh-azu-creator"] .dailyHotLatest h2,
+[data-plugin="dsh-azu-creator"] .dailyHotSummary h2,
+[data-plugin="dsh-azu-creator"] .dailyHotEvidenceGroup h2 {
   margin: 0;
   color: var(--muzi-island-text-soft);
   font-size: var(--muzi-type-support-size, 0.75rem);
@@ -151,11 +151,11 @@
   letter-spacing: .01em;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLatest h2 {
+[data-plugin="dsh-azu-creator"] .dailyHotLatest h2 {
   color: var(--muzi-island-leaf);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLatest p {
+[data-plugin="dsh-azu-creator"] .dailyHotLatest p {
   margin: 0;
   color: var(--muzi-island-text);
   font-size: var(--muzi-type-body-size, 0.875rem);
@@ -163,18 +163,18 @@
   text-wrap: pretty;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSummary {
+[data-plugin="dsh-azu-creator"] .dailyHotSummary {
   display: grid;
   gap: 12px;
   padding: 28px 0 8px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSummaryBody {
+[data-plugin="dsh-azu-creator"] .dailyHotSummaryBody {
   display: grid;
   gap: 14px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSummaryBody p {
+[data-plugin="dsh-azu-creator"] .dailyHotSummaryBody p {
   max-width: 72ch;
   margin: 0;
   color: var(--muzi-island-text);
@@ -184,7 +184,7 @@
   text-wrap: pretty;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotEvidenceRail {
+[data-plugin="dsh-azu-creator"] .dailyHotEvidenceRail {
   display: grid;
   min-width: 0;
   gap: 0;
@@ -193,25 +193,25 @@
   border-top: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotEvidenceGroup {
+[data-plugin="dsh-azu-creator"] .dailyHotEvidenceGroup {
   display: grid;
   gap: 12px;
   padding: 0 0 22px;
   border-bottom: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotEvidenceGroup + .dailyHotEvidenceGroup {
+[data-plugin="dsh-azu-creator"] .dailyHotEvidenceGroup + .dailyHotEvidenceGroup {
   padding-top: 22px;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotFacts {
+[data-plugin="dsh-azu-creator"] .dailyHotFacts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 24px;
   margin: 0;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotFacts > div {
+[data-plugin="dsh-azu-creator"] .dailyHotFacts > div {
   display: grid;
   min-width: 0;
   gap: 3px;
@@ -219,13 +219,13 @@
   border-bottom: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotFacts dt {
+[data-plugin="dsh-azu-creator"] .dailyHotFacts dt {
   color: var(--muzi-island-text-faint);
   font-size: var(--muzi-type-support-size, 0.75rem);
   line-height: var(--muzi-type-support-line, 1.125rem);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotFacts dd {
+[data-plugin="dsh-azu-creator"] .dailyHotFacts dd {
   min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
@@ -234,7 +234,7 @@
   line-height: var(--muzi-type-body-line, 1.3125rem);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSourceNames ul {
+[data-plugin="dsh-azu-creator"] .dailyHotSourceNames ul {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -243,12 +243,12 @@
   list-style: none;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSourceNames li {
+[data-plugin="dsh-azu-creator"] .dailyHotSourceNames li {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSourcesToggle {
+[data-plugin="dsh-azu-creator"] .dailyHotSourcesToggle {
   display: inline-flex;
   min-height: 40px;
   width: fit-content;
@@ -266,12 +266,12 @@
   cursor: pointer;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotSourcesToggle:hover {
+[data-plugin="dsh-azu-creator"] .dailyHotSourcesToggle:hover {
   background: var(--muzi-island-leaf-soft);
 }
 
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLinks {
+[data-plugin="dsh-azu-creator"] .dailyHotLinks {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -279,7 +279,7 @@
   border-bottom: 1px solid var(--muzi-border);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLinks a {
+[data-plugin="dsh-azu-creator"] .dailyHotLinks a {
   display: inline-flex;
   min-width: 0;
   min-height: 40px;
@@ -296,17 +296,17 @@
   text-decoration: none;
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLinks a:first-child {
+[data-plugin="dsh-azu-creator"] .dailyHotLinks a:first-child {
   border-color: var(--muzi-island-leaf);
   background: var(--muzi-island-leaf);
   color: var(--muzi-island-paper);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotLinks a:hover {
+[data-plugin="dsh-azu-creator"] .dailyHotLinks a:hover {
   filter: brightness(.97);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDisclaimer {
+[data-plugin="dsh-azu-creator"] .dailyHotDisclaimer {
   display: flex;
   align-items: flex-start;
   gap: 9px;
@@ -318,115 +318,115 @@
 }
 
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDisclaimer p {
+[data-plugin="dsh-azu-creator"] .dailyHotDisclaimer p {
   margin: 0;
   font-size: var(--muzi-type-support-size, 0.75rem);
   line-height: var(--muzi-type-support-line, 1.125rem);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotDisclaimer strong {
+[data-plugin="dsh-azu-creator"] .dailyHotDisclaimer strong {
   display: block;
   margin-bottom: 2px;
   color: var(--muzi-island-text);
 }
 
-[data-plugin="dsh-muzi-creator"] .dailyHotHeroMeta > span,
-[data-plugin="dsh-muzi-creator"] .dailyHotDomains > span,
-[data-plugin="dsh-muzi-creator"] .dailyHotSourceNames li > span { min-width: 0; max-width: 100%; }
-[data-plugin="dsh-muzi-creator"] .dailyHotDomains span[class*="animal-tag"],
-[data-plugin="dsh-muzi-creator"] .dailyHotSourceNames span[class*="animal-tag"] { min-width: 0; max-width: 100%; }
-[data-plugin="dsh-muzi-creator"] .dailyHotDomains span[class*="animal-text"],
-[data-plugin="dsh-muzi-creator"] .dailyHotSourceNames span[class*="animal-text"] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-plugin="dsh-azu-creator"] .dailyHotHeroMeta > span,
+[data-plugin="dsh-azu-creator"] .dailyHotDomains > span,
+[data-plugin="dsh-azu-creator"] .dailyHotSourceNames li > span { min-width: 0; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .dailyHotDomains span[class*="animal-tag"],
+[data-plugin="dsh-azu-creator"] .dailyHotSourceNames span[class*="animal-tag"] { min-width: 0; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .dailyHotDomains span[class*="animal-text"],
+[data-plugin="dsh-azu-creator"] .dailyHotSourceNames span[class*="animal-text"] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (min-width: 1080px) {
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotInspectorScroll {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotInspectorScroll {
     padding-right: 36px;
     padding-left: 36px;
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotDetailLayout {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotDetailLayout {
     max-width: 1120px;
     grid-template-columns: minmax(0, 1fr) 288px;
     gap: 40px;
     align-items: start;
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotHero h1 {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotHero h1 {
     font-size: var(--muzi-type-title-size, 1.25rem);
     line-height: var(--muzi-type-title-line, 1.75rem);
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotEvidenceRail {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotEvidenceRail {
     margin-top: 0;
     padding: 36px 0 56px 28px;
     border-top: 0;
     border-left: 1px solid var(--muzi-border);
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotFacts {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotFacts {
     grid-template-columns: 1fr;
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotLinks {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotLinks {
     flex-direction: column;
   }
 
-  [data-plugin="dsh-muzi-creator"][data-surface="daily-hot-inspector"] .dailyHotLinks a {
+  [data-plugin="dsh-azu-creator"][data-surface="daily-hot-inspector"] .dailyHotLinks a {
     width: 100%;
     box-sizing: border-box;
   }
 }
 
 @media (max-width: 620px) {
-  [data-plugin="dsh-muzi-creator"] .dailyHotInspectorTop {
+  [data-plugin="dsh-azu-creator"] .dailyHotInspectorTop {
     height: 48px;
     padding: 0 10px 0 14px;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotInspectorScroll {
+  [data-plugin="dsh-azu-creator"] .dailyHotInspectorScroll {
     padding: 0 15px 40px;
     scrollbar-gutter: auto;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotHero {
+  [data-plugin="dsh-azu-creator"] .dailyHotHero {
     padding-top: 24px;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotHero h1 {
+  [data-plugin="dsh-azu-creator"] .dailyHotHero h1 {
     font-size: var(--muzi-type-title-size, 1.25rem);
     line-height: var(--muzi-type-title-line, 1.75rem);
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotHero > p,
-  [data-plugin="dsh-muzi-creator"] .dailyHotLatest p,
-  [data-plugin="dsh-muzi-creator"] .dailyHotSummaryBody p {
+  [data-plugin="dsh-azu-creator"] .dailyHotHero > p,
+  [data-plugin="dsh-azu-creator"] .dailyHotLatest p,
+  [data-plugin="dsh-azu-creator"] .dailyHotSummaryBody p {
     font-size: var(--muzi-type-body-size, 0.875rem);
     line-height: var(--muzi-type-body-line, 1.3125rem);
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotLatest {
+  [data-plugin="dsh-azu-creator"] .dailyHotLatest {
     padding: 14px 15px;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotFacts {
+  [data-plugin="dsh-azu-creator"] .dailyHotFacts {
     grid-template-columns: 1fr;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotSourcesToggle {
+  [data-plugin="dsh-azu-creator"] .dailyHotSourcesToggle {
     min-height: 40px;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotLinks {
+  [data-plugin="dsh-azu-creator"] .dailyHotLinks {
     flex-direction: column;
   }
 
-  [data-plugin="dsh-muzi-creator"] .dailyHotLinks a {
+  [data-plugin="dsh-azu-creator"] .dailyHotLinks a {
     min-height: 40px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-plugin="dsh-muzi-creator"] .dailyHotSourcesToggle svg {
+  [data-plugin="dsh-azu-creator"] .dailyHotSourcesToggle svg {
     transition: none;
   }
 }

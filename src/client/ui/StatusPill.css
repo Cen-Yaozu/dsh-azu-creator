@@ -1,4 +1,4 @@
-[data-plugin="dsh-muzi-creator"] .statusPill {
+[data-plugin="dsh-azu-creator"] .statusPill {
   gap: 5px;
   max-width: 100%;
   font-size: var(--muzi-type-support-size, 0.75rem);
@@ -7,7 +7,7 @@
   white-space: nowrap;
 }
 
-[data-plugin="dsh-muzi-creator"] .statusPillDot {
+[data-plugin="dsh-azu-creator"] .statusPillDot {
   width: 7px;
   height: 7px;
   flex: none;
@@ -15,15 +15,15 @@
   background: currentcolor;
 }
 
-[data-plugin="dsh-muzi-creator"] .statusPill.pending {
+[data-plugin="dsh-azu-creator"] .statusPill.pending {
   color: var(--muzi-island-warning);
 }
 
-[data-plugin="dsh-muzi-creator"] .statusPill.active,
-[data-plugin="dsh-muzi-creator"] .statusPill.success {
+[data-plugin="dsh-azu-creator"] .statusPill.active,
+[data-plugin="dsh-azu-creator"] .statusPill.success {
   color: var(--muzi-island-success);
 }
 
-[data-plugin="dsh-muzi-creator"] .statusPill.error {
+[data-plugin="dsh-azu-creator"] .statusPill.error {
   color: var(--muzi-island-danger);
 }

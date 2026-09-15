@@ -57,8 +57,8 @@ const APPEARANCE_PACKAGE_FILES = [
   "src/client/appearance/assets/icons/manifest.json",
 ];
 
-const GITHUB_REPOSITORY = "https://github.com/MuziGeek/dsh-muzi-creator";
-const GITHUB_REPOSITORY_GIT = "git+https://github.com/MuziGeek/dsh-muzi-creator.git";
+const GITHUB_REPOSITORY = "https://github.com/Cen-Yaozu/dsh-azu-creator";
+const GITHUB_REPOSITORY_GIT = "git+https://github.com/Cen-Yaozu/dsh-azu-creator.git";
 
 function git(root, args) {
   return execFileSync("git", args, {

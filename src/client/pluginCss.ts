@@ -1,5 +1,5 @@
-const STORE = "__dshMuziCreatorCss";
-const PLUGIN_ID = "dsh-muzi-creator";
+const STORE = "__dshAzuCreatorCss";
+const PLUGIN_ID = "dsh-azu-creator";
 
 interface CssStore {
   sheets: Map<string, string>;

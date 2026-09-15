@@ -122,7 +122,7 @@ export class TrellisProjectService {
     this.config = resolveTrellisConfig(baseConfig);
     ctx.effect(() => () => {
       this.dispose();
-    }, "dsh-muzi-creator: Trellis project watches");
+    }, "dsh-azu-creator: Trellis project watches");
     void this.refreshWatches();
   }
 

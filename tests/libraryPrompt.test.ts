@@ -10,12 +10,12 @@ describe("libraryConventionText", () => {
   it("describes the Muzi facts and prevents direct file writes", () => {
     const text = libraryConventionText("/Movies/视频项目", "/.dsh-mz-creator");
     expect(text).toContain("Creator Studio");
-    expect(text).toContain("Muzi Atlas");
+    expect(text).toContain("Azu Atlas");
     expect(text).toContain("raw/ 不参与搜索");
     expect(text).toContain("muzi_creator_*");
     expect(text).toContain("muzi_knowledge_*");
     expect(text).toContain("script.md");
-    expect(text).toContain("mz_script_rules");
+    expect(text).toContain("azu_script_rules");
     expect(text).toContain("逐次通过 DSH 审批");
     expect(text).not.toContain("/Movies/视频项目");
     expect(text).not.toContain("/.dsh-mz-creator");
@@ -49,7 +49,7 @@ describe("resolvePromptLibraryRoot", () => {
 });
 
 describe("registerLibraryPrompt", () => {
-  it("registers a stable mz:library section", () => {
+  it("registers a stable azu:library section", () => {
     const seen: Array<{ name: string; order: number; text: string }> = [];
     registerLibraryPrompt({
       systemPrompt: {
@@ -61,7 +61,7 @@ describe("registerLibraryPrompt", () => {
       },
     }, { libraryRoot: "/lib", dataDir: "/data" });
     expect(seen).toEqual([{
-      name: "mz:library",
+      name: "azu:library",
       order: 120,
       text: libraryConventionText("/lib", "/data"),
     }]);

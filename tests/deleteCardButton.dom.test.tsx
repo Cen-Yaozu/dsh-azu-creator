@@ -80,7 +80,7 @@ it("focuses cancel and restores the trigger after native cancellation without de
   await user.click(trigger);
   const cancel = screen.getByRole("button", { name: "取消" });
   await waitFor(() => expect(document.activeElement).toBe(cancel));
-  expect(screen.getByRole("dialog").dataset.pluginModal).toBe("dsh-muzi-creator");
+  expect(screen.getByRole("dialog").dataset.pluginModal).toBe("dsh-azu-creator");
   fireEvent(screen.getByRole("dialog"), new Event("cancel", { cancelable: true }));
   expect(screen.queryByRole("dialog")).toBeNull();
   expect(document.activeElement).toBe(trigger);

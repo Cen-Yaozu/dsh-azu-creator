@@ -11,12 +11,12 @@ interface SkillsContext {
 }
 
 export const CREATOR_WORKBENCH_SKILL = {
-  name: "muzi-creator-workbench",
+  name: "azu-creator-workbench",
   description:
-    "使用 Muzi Creator 将正式 llm-wiki 知识加工成母内容和多渠道稿件，并管理本地视频制作状态。",
+    "使用 Azu 工作台 (Azu Creator) 将正式 llm-wiki 知识加工成母内容和多渠道稿件，并管理本地视频制作状态。",
   source: "runtime" as const,
   invocation: { modelInvocable: true, userInvocable: true },
-  content: `# Muzi Creator
+  content: `# Azu Creator (Azu 工作台)
 
 ## 事实源
 

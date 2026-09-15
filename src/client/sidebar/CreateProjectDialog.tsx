@@ -36,7 +36,7 @@ export function CreateProjectDialog({
   useEffect(() => {
     const modal = document.querySelector<HTMLElement>(".muziCreateModal");
     if (modal === null) return () => { returnFocus.current?.focus(); };
-    modal.dataset.plugin = "dsh-muzi-creator";
+    modal.dataset.plugin = "dsh-azu-creator";
     modal.dataset.surface = "muzi-create-dialog";
     return () => {
       delete modal.dataset.plugin;

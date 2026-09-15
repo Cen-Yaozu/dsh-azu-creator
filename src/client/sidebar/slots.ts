@@ -28,8 +28,10 @@ export interface MzSidebarInjected {
   toggleSidebar: () => void;
 }
 
-export type MzSidebarSlotProps =
+export type AzSidebarSlotProps =
   & PropsRuntime<"sidebar">
   & PropsRenderSlots<"sidebar.workspaces" | "sidebar.settings" | "sidebar.footer.action">
   & MzSidebarInjected
-  & PropsLocale<"dsh.mz.creator">;
+  & PropsLocale<"dsh.azu.creator">;
+
+export type MzSidebarSlotProps = AzSidebarSlotProps;

@@ -1,6 +1,6 @@
 /* Hallmark · macrostructure: Central detail · tone: warm precise · anchor hue: leaf */
 
-[data-plugin="dsh-muzi-creator"][data-surface="trellis-inspector"] {
+[data-plugin="dsh-azu-creator"][data-surface="trellis-inspector"] {
   --muzi-surface: var(--muzi-island-paper);
   --muzi-surface-soft: var(--muzi-island-canvas);
   --muzi-surface-muted: var(--muzi-island-sidebar);
@@ -13,7 +13,7 @@
   --trellis-line-body: var(--muzi-type-body-line, 1.3125rem);
 }
 
-[data-plugin="dsh-muzi-creator"][data-surface="trellis-inspector"] {
+[data-plugin="dsh-azu-creator"][data-surface="trellis-inspector"] {
   position: relative;
   display: flex;
   width: 100%;
@@ -27,7 +27,7 @@
   box-sizing: border-box;
 }
 
-[data-plugin="dsh-muzi-creator"] .trellisInspectorTop {
+[data-plugin="dsh-azu-creator"] .trellisInspectorTop {
   display: flex;
   height: 56px;
   flex: none;
@@ -37,102 +37,102 @@
   padding: 0 12px 0 18px;
   border-bottom: 1px solid var(--muzi-border);
 }
-[data-plugin="dsh-muzi-creator"] .trellisInspectorTop > div { display: flex; min-width: 0; align-items: center; gap: 8px; }
-[data-plugin="dsh-muzi-creator"] .trellisInspectorTop > div:first-child span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--muzi-type-card-title-size, 1rem); font-weight: var(--muzi-type-card-title-weight, 700); }
-[data-plugin="dsh-muzi-creator"] .trellisTopActions { flex: none; gap: 4px; }
+[data-plugin="dsh-azu-creator"] .trellisInspectorTop > div { display: flex; min-width: 0; align-items: center; gap: 8px; }
+[data-plugin="dsh-azu-creator"] .trellisInspectorTop > div:first-child span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--muzi-type-card-title-size, 1rem); font-weight: var(--muzi-type-card-title-weight, 700); }
+[data-plugin="dsh-azu-creator"] .trellisTopActions { flex: none; gap: 4px; }
 
-[data-plugin="dsh-muzi-creator"] .trellisInspectorScroll { flex: 1; min-height: 0; overflow: auto; padding: 0 22px 48px; }
-[data-plugin="dsh-muzi-creator"] .trellisInspectorState { display: grid; width: min(360px, 80%); flex: 1; place-content: center; gap: 10px; margin: 0 auto; padding: 24px; color: var(--muzi-island-text-faint); text-align: center; }
-[data-plugin="dsh-muzi-creator"] .trellisInspectorState p { margin: 0; font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
-[data-plugin="dsh-muzi-creator"] .trellisInspectorState.error { color: var(--muzi-island-danger); }
+[data-plugin="dsh-azu-creator"] .trellisInspectorScroll { flex: 1; min-height: 0; overflow: auto; padding: 0 22px 48px; }
+[data-plugin="dsh-azu-creator"] .trellisInspectorState { display: grid; width: min(360px, 80%); flex: 1; place-content: center; gap: 10px; margin: 0 auto; padding: 24px; color: var(--muzi-island-text-faint); text-align: center; }
+[data-plugin="dsh-azu-creator"] .trellisInspectorState p { margin: 0; font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
+[data-plugin="dsh-azu-creator"] .trellisInspectorState.error { color: var(--muzi-island-danger); }
 
-[data-plugin="dsh-muzi-creator"] .trellisProjectHero { display: grid; gap: 16px; padding: 24px 0 20px; border-bottom: 1px solid var(--muzi-border); }
-[data-plugin="dsh-muzi-creator"] .trellisHeroHeading { display: grid; gap: 5px; }
-[data-plugin="dsh-muzi-creator"] .trellisHeroHeading h1 { max-width: 28ch; margin: 0; color: var(--muzi-island-text); font-size: var(--muzi-type-title-size, 1.25rem); line-height: var(--muzi-type-title-line, 1.75rem); letter-spacing: -.025em; text-wrap: balance; }
-[data-plugin="dsh-muzi-creator"] .trellisHeroHeading p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
-[data-plugin="dsh-muzi-creator"] .trellisProjectState { width: fit-content; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .trellisProjectHero { display: grid; gap: 16px; padding: 24px 0 20px; border-bottom: 1px solid var(--muzi-border); }
+[data-plugin="dsh-azu-creator"] .trellisHeroHeading { display: grid; gap: 5px; }
+[data-plugin="dsh-azu-creator"] .trellisHeroHeading h1 { max-width: 28ch; margin: 0; color: var(--muzi-island-text); font-size: var(--muzi-type-title-size, 1.25rem); line-height: var(--muzi-type-title-line, 1.75rem); letter-spacing: -.025em; text-wrap: balance; }
+[data-plugin="dsh-azu-creator"] .trellisHeroHeading p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
+[data-plugin="dsh-azu-creator"] .trellisProjectState { width: fit-content; max-width: 100%; }
 
-[data-plugin="dsh-muzi-creator"] .trellisDistribution { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: var(--muzi-radius-md); background: var(--muzi-border); }
-[data-plugin="dsh-muzi-creator"] .trellisDistribution > div { display: grid; gap: 2px; padding: 11px 10px; background: var(--muzi-surface-soft); }
-[data-plugin="dsh-muzi-creator"] .trellisDistribution strong { font-size: 20px; line-height: 24px; font-variant-numeric: tabular-nums; }
-[data-plugin="dsh-muzi-creator"] .trellisDistribution span { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisProjectIssues { color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisProjectIssues summary { cursor: pointer; }
-[data-plugin="dsh-muzi-creator"] .trellisProjectIssues ul { margin: 8px 0 0; padding-left: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisDistribution { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: var(--muzi-radius-md); background: var(--muzi-border); }
+[data-plugin="dsh-azu-creator"] .trellisDistribution > div { display: grid; gap: 2px; padding: 11px 10px; background: var(--muzi-surface-soft); }
+[data-plugin="dsh-azu-creator"] .trellisDistribution strong { font-size: 20px; line-height: 24px; font-variant-numeric: tabular-nums; }
+[data-plugin="dsh-azu-creator"] .trellisDistribution span { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisProjectIssues { color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisProjectIssues summary { cursor: pointer; }
+[data-plugin="dsh-azu-creator"] .trellisProjectIssues ul { margin: 8px 0 0; padding-left: 18px; }
 
-[data-plugin="dsh-muzi-creator"] .trellisProjectToolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
-[data-plugin="dsh-muzi-creator"] .trellisPriorityField { display: flex; align-items: center; gap: 8px; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); }
-[data-plugin="dsh-muzi-creator"] .trellisPriorityLabel { color: var(--muzi-island-text-soft); }
-[data-plugin="dsh-muzi-creator"] .trellisPriorityField > div { min-width: 148px; z-index: 3; }
-[data-plugin="dsh-muzi-creator"] .trellisPriorityField [role="combobox"] { min-height: 40px; border-radius: var(--muzi-radius-sm); }
-[data-plugin="dsh-muzi-creator"] .trellisProjectToolbar > span { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisProjectToolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
+[data-plugin="dsh-azu-creator"] .trellisPriorityField { display: flex; align-items: center; gap: 8px; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); }
+[data-plugin="dsh-azu-creator"] .trellisPriorityLabel { color: var(--muzi-island-text-soft); }
+[data-plugin="dsh-azu-creator"] .trellisPriorityField > div { min-width: 148px; z-index: 3; }
+[data-plugin="dsh-azu-creator"] .trellisPriorityField [role="combobox"] { min-height: 40px; border-radius: var(--muzi-radius-sm); }
+[data-plugin="dsh-azu-creator"] .trellisProjectToolbar > span { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
 
-[data-plugin="dsh-muzi-creator"] .trellisTaskBoard { display: grid; grid-auto-rows: 1fr; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskGroup { display: grid; min-width: 0; grid-template-rows: auto 264px; padding: 12px; border: 1px solid var(--muzi-border); border-radius: var(--muzi-radius-md); background: var(--muzi-surface-soft); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskGroup > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskGroup h3 { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); font-weight: var(--muzi-type-support-weight, 500); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskGroup > header span { display: grid; min-width: 21px; height: 21px; place-items: center; border-radius: 999px; background: var(--muzi-surface-muted); color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); font-variant-numeric: tabular-nums; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows { display: flex; min-height: 0; flex-direction: column; align-items: stretch; gap: 6px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows:focus-visible { outline: 3px solid var(--muzi-island-focus); outline-offset: 2px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows button { display: flex; width: 100%; min-width: 0; height: 48px; min-height: 48px; flex: 0 0 48px; box-sizing: border-box; text-align: left; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows button > span:last-child { display: flex; width: 100%; min-width: 0; align-items: center; gap: 9px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows button.selected { outline: 2px solid var(--animal-focus-yellow); outline-offset: 2px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskStatus { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--muzi-island-text-faint); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskStatus.in_progress { background: var(--muzi-island-leaf); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskStatus.planning { background: var(--muzi-island-warning, #a56b00); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskStatus.completed { background: var(--muzi-island-success, #2f9461); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRowBody { display: grid; min-width: 0; flex: 1; gap: 2px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRowBody strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRowBody small { overflow: hidden; color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); text-overflow: ellipsis; white-space: nowrap; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows span[class*="animal-tag"],
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail span[class*="animal-tag"] { min-width: 0; max-width: 100%; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskRows span[class*="animal-text"],
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail span[class*="animal-text"] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-[data-plugin="dsh-muzi-creator"] .trellisEvidence { flex: none; max-width: 100%; }
-[data-plugin="dsh-muzi-creator"] .trellisGroupEmpty { display: grid; width: 100%; height: 100%; place-items: center; margin: 0; padding: 8px 4px; color: var(--muzi-island-text-faint); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); text-align: center; }
+[data-plugin="dsh-azu-creator"] .trellisTaskBoard { display: grid; grid-auto-rows: 1fr; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskGroup { display: grid; min-width: 0; grid-template-rows: auto 264px; padding: 12px; border: 1px solid var(--muzi-border); border-radius: var(--muzi-radius-md); background: var(--muzi-surface-soft); }
+[data-plugin="dsh-azu-creator"] .trellisTaskGroup > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskGroup h3 { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); font-weight: var(--muzi-type-support-weight, 500); }
+[data-plugin="dsh-azu-creator"] .trellisTaskGroup > header span { display: grid; min-width: 21px; height: 21px; place-items: center; border-radius: 999px; background: var(--muzi-surface-muted); color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); font-variant-numeric: tabular-nums; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows { display: flex; min-height: 0; flex-direction: column; align-items: stretch; gap: 6px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows:focus-visible { outline: 3px solid var(--muzi-island-focus); outline-offset: 2px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows button { display: flex; width: 100%; min-width: 0; height: 48px; min-height: 48px; flex: 0 0 48px; box-sizing: border-box; text-align: left; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows button > span:last-child { display: flex; width: 100%; min-width: 0; align-items: center; gap: 9px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows button.selected { outline: 2px solid var(--animal-focus-yellow); outline-offset: 2px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskStatus { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--muzi-island-text-faint); }
+[data-plugin="dsh-azu-creator"] .trellisTaskStatus.in_progress { background: var(--muzi-island-leaf); }
+[data-plugin="dsh-azu-creator"] .trellisTaskStatus.planning { background: var(--muzi-island-warning, #a56b00); }
+[data-plugin="dsh-azu-creator"] .trellisTaskStatus.completed { background: var(--muzi-island-success, #2f9461); }
+[data-plugin="dsh-azu-creator"] .trellisTaskRowBody { display: grid; min-width: 0; flex: 1; gap: 2px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRowBody strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRowBody small { overflow: hidden; color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); text-overflow: ellipsis; white-space: nowrap; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows span[class*="animal-tag"],
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail span[class*="animal-tag"] { min-width: 0; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .trellisTaskRows span[class*="animal-text"],
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail span[class*="animal-text"] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-plugin="dsh-azu-creator"] .trellisEvidence { flex: none; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .trellisGroupEmpty { display: grid; width: 100%; height: 100%; place-items: center; margin: 0; padding: 8px 4px; color: var(--muzi-island-text-faint); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); text-align: center; }
 
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail { display: grid; gap: 18px; margin-top: 20px; padding: 20px 0 8px; border-top: 1px solid var(--muzi-border); background: var(--muzi-surface); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail > header > div { display: grid; min-width: 0; gap: 6px; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail h2 { margin: 0; font-size: var(--muzi-type-title-size, 1.25rem); line-height: var(--muzi-type-title-line, 1.75rem); letter-spacing: -.02em; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskDetail > header p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
-[data-plugin="dsh-muzi-creator"] .trellisStatusLabel { width: fit-content; max-width: 100%; }
-[data-plugin="dsh-muzi-creator"] .trellisArchiveButton { display: inline-flex; min-height: 40px; flex: none; align-items: center; gap: 7px; border-radius: var(--muzi-radius-sm); color: inherit; cursor: pointer; font-size: var(--muzi-type-body-size, 0.875rem); line-height: var(--muzi-type-body-line, 1.3125rem); }
-[data-plugin="dsh-muzi-creator"] .trellisArchiveButton:hover { background: var(--muzi-island-leaf-soft); }
-[data-plugin="dsh-muzi-creator"] .trellisArchiveButton:disabled { opacity: .5; cursor: default; }
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail { display: grid; gap: 18px; margin-top: 20px; padding: 20px 0 8px; border-top: 1px solid var(--muzi-border); background: var(--muzi-surface); }
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail > header > div { display: grid; min-width: 0; gap: 6px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail h2 { margin: 0; font-size: var(--muzi-type-title-size, 1.25rem); line-height: var(--muzi-type-title-line, 1.75rem); letter-spacing: -.02em; }
+[data-plugin="dsh-azu-creator"] .trellisTaskDetail > header p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); }
+[data-plugin="dsh-azu-creator"] .trellisStatusLabel { width: fit-content; max-width: 100%; }
+[data-plugin="dsh-azu-creator"] .trellisArchiveButton { display: inline-flex; min-height: 40px; flex: none; align-items: center; gap: 7px; border-radius: var(--muzi-radius-sm); color: inherit; cursor: pointer; font-size: var(--muzi-type-body-size, 0.875rem); line-height: var(--muzi-type-body-line, 1.3125rem); }
+[data-plugin="dsh-azu-creator"] .trellisArchiveButton:hover { background: var(--muzi-island-leaf-soft); }
+[data-plugin="dsh-azu-creator"] .trellisArchiveButton:disabled { opacity: .5; cursor: default; }
 
-[data-plugin="dsh-muzi-creator"] .trellisTaskFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: 10px; background: var(--muzi-border); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskFacts > div { display: grid; gap: 3px; padding: 10px; background: var(--muzi-surface); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskFacts dt { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskFacts dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
-[data-plugin="dsh-muzi-creator"] .trellisPhaseSummary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: 10px; background: var(--muzi-border); }
-[data-plugin="dsh-muzi-creator"] .trellisPhaseSummary > div { display: grid; gap: 3px; padding: 10px; background: var(--muzi-surface); }
-[data-plugin="dsh-muzi-creator"] .trellisPhaseSummary dt { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisPhaseSummary dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard { display: flex; align-items: flex-start; gap: 9px; padding: 12px; border-radius: 10px; background: var(--muzi-surface-soft); color: var(--muzi-island-text-soft); }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard.meaningful { background: var(--muzi-island-success-soft, rgb(45 145 93 / 8%)); color: var(--muzi-island-success, #2f9461); }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard.invalid { background: var(--muzi-island-danger-soft, rgb(190 60 50 / 8%)); color: var(--muzi-island-danger); }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard div { display: grid; gap: 3px; }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard strong { font-size: var(--trellis-font-body); line-height: 18px; }
-[data-plugin="dsh-muzi-creator"] .trellisEvidenceCard p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisTaskFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: 10px; background: var(--muzi-border); }
+[data-plugin="dsh-azu-creator"] .trellisTaskFacts > div { display: grid; gap: 3px; padding: 10px; background: var(--muzi-surface); }
+[data-plugin="dsh-azu-creator"] .trellisTaskFacts dt { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisTaskFacts dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisPhaseSummary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; overflow: hidden; border: 1px solid var(--muzi-border); border-radius: 10px; background: var(--muzi-border); }
+[data-plugin="dsh-azu-creator"] .trellisPhaseSummary > div { display: grid; gap: 3px; padding: 10px; background: var(--muzi-surface); }
+[data-plugin="dsh-azu-creator"] .trellisPhaseSummary dt { color: var(--muzi-island-text-faint); font-size: var(--trellis-font-caption); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisPhaseSummary dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--trellis-font-body); line-height: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard { display: flex; align-items: flex-start; gap: 9px; padding: 12px; border-radius: 10px; background: var(--muzi-surface-soft); color: var(--muzi-island-text-soft); }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard.meaningful { background: var(--muzi-island-success-soft, rgb(45 145 93 / 8%)); color: var(--muzi-island-success, #2f9461); }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard.invalid { background: var(--muzi-island-danger-soft, rgb(190 60 50 / 8%)); color: var(--muzi-island-danger); }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard div { display: grid; gap: 3px; }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard strong { font-size: var(--trellis-font-body); line-height: 18px; }
+[data-plugin="dsh-azu-creator"] .trellisEvidenceCard p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: 18px; }
 
-[data-plugin="dsh-muzi-creator"] .trellisRelations,
-[data-plugin="dsh-muzi-creator"] .trellisRelatedFiles,
-[data-plugin="dsh-muzi-creator"] .trellisTaskNotes { display: grid; gap: 8px; }
-[data-plugin="dsh-muzi-creator"] .trellisRelations h3,
-[data-plugin="dsh-muzi-creator"] .trellisRelatedFiles h3,
-[data-plugin="dsh-muzi-creator"] .trellisTaskNotes h3 { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisRelations p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisRelations p > span { color: var(--muzi-island-text-faint); }
-[data-plugin="dsh-muzi-creator"] .trellisRelations button { padding: 4px 8px; border: 1px solid var(--muzi-border); border-radius: 7px; background: transparent; color: var(--muzi-island-leaf); cursor: pointer; font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisRelatedFiles ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
-[data-plugin="dsh-muzi-creator"] .trellisRelatedFiles li { padding: 7px 9px; border-radius: 7px; background: var(--muzi-surface-soft); color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); overflow-wrap: anywhere; }
-[data-plugin="dsh-muzi-creator"] .trellisTaskNotes p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); white-space: pre-wrap; }
-[data-plugin="dsh-muzi-creator"] .trellisUnknownFields { margin: 0; color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisTaskIssues { margin: 0; padding-left: 18px; color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisRelations,
+[data-plugin="dsh-azu-creator"] .trellisRelatedFiles,
+[data-plugin="dsh-azu-creator"] .trellisTaskNotes { display: grid; gap: 8px; }
+[data-plugin="dsh-azu-creator"] .trellisRelations h3,
+[data-plugin="dsh-azu-creator"] .trellisRelatedFiles h3,
+[data-plugin="dsh-azu-creator"] .trellisTaskNotes h3 { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisRelations p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisRelations p > span { color: var(--muzi-island-text-faint); }
+[data-plugin="dsh-azu-creator"] .trellisRelations button { padding: 4px 8px; border: 1px solid var(--muzi-border); border-radius: 7px; background: transparent; color: var(--muzi-island-leaf); cursor: pointer; font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisRelatedFiles ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+[data-plugin="dsh-azu-creator"] .trellisRelatedFiles li { padding: 7px 9px; border-radius: 7px; background: var(--muzi-surface-soft); color: var(--muzi-island-text-soft); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); overflow-wrap: anywhere; }
+[data-plugin="dsh-azu-creator"] .trellisTaskNotes p { margin: 0; color: var(--muzi-island-text-soft); font-size: var(--trellis-font-body); line-height: var(--trellis-line-body); white-space: pre-wrap; }
+[data-plugin="dsh-azu-creator"] .trellisUnknownFields { margin: 0; color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisTaskIssues { margin: 0; padding-left: 18px; color: var(--muzi-island-warning); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
 
-[data-plugin="dsh-muzi-creator"] .trellisNotice { position: absolute; right: 16px; bottom: 16px; left: 16px; display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--muzi-border); background: var(--muzi-surface); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
-[data-plugin="dsh-muzi-creator"] .trellisNotice button { flex: none; }
+[data-plugin="dsh-azu-creator"] .trellisNotice { position: absolute; right: 16px; bottom: 16px; left: 16px; display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--muzi-border); background: var(--muzi-surface); font-size: var(--trellis-font-label); line-height: var(--trellis-line-caption); }
+[data-plugin="dsh-azu-creator"] .trellisNotice button { flex: none; }
 .trellisArchiveModal { color-scheme: light dark; }
 .trellisArchiveModal [class*="animal-body"] { align-items: stretch; font-size: var(--trellis-font-body); font-weight: var(--muzi-type-body-weight, 500); }
 .trellisArchiveTitle { display: flex; align-items: center; gap: 12px; color: var(--muzi-island-text); }
@@ -159,19 +159,19 @@
 .trellisArchiveError { margin: 0; color: var(--muzi-island-danger); font-size: 13px; line-height: 20px; }
 
 @media (max-width: 620px) {
-  [data-plugin="dsh-muzi-creator"] .trellisInspectorTop { height: 48px; padding: 0 10px 0 14px; }
-  [data-plugin="dsh-muzi-creator"] .trellisInspectorScroll { padding: 0 14px 40px; }
-  [data-plugin="dsh-muzi-creator"] .trellisDistribution { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  [data-plugin="dsh-muzi-creator"] .trellisTaskBoard { grid-template-columns: 1fr; }
-  [data-plugin="dsh-muzi-creator"] .trellisTaskDetail { padding: 15px; }
-  [data-plugin="dsh-muzi-creator"] .trellisTaskDetail > header { flex-direction: column; }
-  [data-plugin="dsh-muzi-creator"] .trellisArchiveButton { width: 100%; justify-content: center; }
-  [data-plugin="dsh-muzi-creator"] .trellisTaskFacts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  [data-plugin="dsh-muzi-creator"] .trellisPhaseSummary { grid-template-columns: 1fr; }
-  [data-plugin="dsh-muzi-creator"] .trellisProjectToolbar { align-items: flex-start; flex-direction: column; gap: 8px; }
+  [data-plugin="dsh-azu-creator"] .trellisInspectorTop { height: 48px; padding: 0 10px 0 14px; }
+  [data-plugin="dsh-azu-creator"] .trellisInspectorScroll { padding: 0 14px 40px; }
+  [data-plugin="dsh-azu-creator"] .trellisDistribution { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-plugin="dsh-azu-creator"] .trellisTaskBoard { grid-template-columns: 1fr; }
+  [data-plugin="dsh-azu-creator"] .trellisTaskDetail { padding: 15px; }
+  [data-plugin="dsh-azu-creator"] .trellisTaskDetail > header { flex-direction: column; }
+  [data-plugin="dsh-azu-creator"] .trellisArchiveButton { width: 100%; justify-content: center; }
+  [data-plugin="dsh-azu-creator"] .trellisTaskFacts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-plugin="dsh-azu-creator"] .trellisPhaseSummary { grid-template-columns: 1fr; }
+  [data-plugin="dsh-azu-creator"] .trellisProjectToolbar { align-items: flex-start; flex-direction: column; gap: 8px; }
   .trellisImpactGrid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-plugin="dsh-muzi-creator"] .trellisProjectCard { transition: none; }
+  [data-plugin="dsh-azu-creator"] .trellisProjectCard { transition: none; }
 }

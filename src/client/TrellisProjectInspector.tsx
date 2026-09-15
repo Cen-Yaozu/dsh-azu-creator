@@ -97,7 +97,7 @@ function ArchiveDialog({ preview, busy, error, t, onCancel, onConfirm }: Archive
       )}
       onClose={() => { if (!busy) onCancel(); }}
     >
-      <div data-plugin-modal="dsh-muzi-creator" className="trellisArchiveDialogBody">
+      <div data-plugin-modal="dsh-azu-creator" className="trellisArchiveDialogBody">
         <p className="trellisNoCommit">{t("projects.archive.noCommit")}</p>
         <dl className="trellisImpactGrid">
           <div><dt>{t("projects.archive.destination")}</dt><dd>{preview.targetMonth}</dd></div>
@@ -273,7 +273,7 @@ export function TrellisProjectInspector({ face, t }: TrellisProjectInspectorProp
 
   return (
     <article
-      data-plugin="dsh-muzi-creator"
+      data-plugin="dsh-azu-creator"
       data-surface="trellis-inspector"
       aria-label={t("projects.detail")}
     >

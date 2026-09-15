@@ -9,9 +9,9 @@ import {
 
 const OPTIONS = {
   namespace: CREATOR_SETTINGS_NAMESPACE,
-  legacyId: "dsh-muzi-creator",
+  legacyId: "dsh-azu-creator",
   legacyOrder: 40,
-  locale: "dsh.mz.creator",
+  locale: "dsh.azu.creator",
   inject: () => ({}),
 };
 
@@ -42,7 +42,7 @@ describe("settings.plugin.item compatibility", () => {
   it("passes the list slot compatibility validation", () => {
     const slots = registerWithSlotCore("list");
     expect(slots.entries("settings.plugin.item")[0]?.options.id)
-      .toBe("dsh-muzi-creator");
+      .toBe("dsh-azu-creator");
   });
 
   it("registers both compatibility coordinates through the public facade", () => {
@@ -56,7 +56,7 @@ describe("settings.plugin.item compatibility", () => {
       expect.objectContaining({
         name: "settings.plugin.item",
         key: CREATOR_SETTINGS_NAMESPACE,
-        id: "dsh-muzi-creator",
+        id: "dsh-azu-creator",
         order: 40,
       }),
       "card",

@@ -1,9 +1,9 @@
-[data-plugin="dsh-muzi-creator"] .cardWithActions { position: relative; min-width: 0; }
-[data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard { padding-right: 104px; width: 100%; box-sizing: border-box; }
-[data-plugin="dsh-muzi-creator"] .cardDeleteActions { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); max-width: calc(100% - 12px); }
-[data-plugin="dsh-muzi-creator"] .cardDeleteActions button { color: var(--muzi-island-paper-danger); }
+[data-plugin="dsh-azu-creator"] .cardWithActions { position: relative; min-width: 0; }
+[data-plugin="dsh-azu-creator"] .cardWithActions > .islandSelectableCard { padding-right: 104px; width: 100%; box-sizing: border-box; }
+[data-plugin="dsh-azu-creator"] .cardDeleteActions { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); max-width: calc(100% - 12px); }
+[data-plugin="dsh-azu-creator"] .cardDeleteActions button { color: var(--muzi-island-paper-danger); }
 
-.cardDeleteModalBody[data-plugin-modal="dsh-muzi-creator"] {
+.cardDeleteModalBody[data-plugin-modal="dsh-azu-creator"] {
   display: grid;
   gap: 12px;
   min-width: 0;
@@ -18,7 +18,7 @@
 .cardDeleteModalHint { color: var(--muzi-island-paper-text); font-size: var(--muzi-type-body-size, 0.875rem); }
 .cardDeleteModalError { color: var(--muzi-island-paper-danger); font-size: var(--muzi-type-body-size, 0.875rem); }
 
-.cardDeleteModalActions[data-plugin-modal="dsh-muzi-creator"] {
+.cardDeleteModalActions[data-plugin-modal="dsh-azu-creator"] {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;

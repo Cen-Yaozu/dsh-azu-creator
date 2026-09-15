@@ -10,11 +10,11 @@ Animal Island UI 的入口只允许客户端 entry 的一次 `animal-island-ui/s
 
 `ConversationWorkbenchController` 只在热点、灵感、内容、知识和项目入口注册一个优先级 `-10` 的根 `conversation` 组件；功能间切换保留这个根，切回会话则立即释放。Slot 注册失败时官方会话继续显示。业务详情已移除 `shell.overlay`、宽度持久化、拖拽条、固定定位和遮罩，只保留原有查询、发布准备、Atlas 只读与归档确认逻辑。组件映射、主题令牌、固定版本选择器、原生控件例外与响应式验收点集中记录在 [DESIGN.md](../DESIGN.md)。
 
-`dsh-muzi-creator` 是挂在 DeepSeek Harness web 配置上的单个运行插件。它把选题、创作、知识、热点、项目进度和受控发布入口放进同一界面；Agent 可在后台继续运行，用户通过“会话”入口恢复完整官方界面。
+`dsh-azu-creator` 是挂在 DeepSeek Harness web 配置上的单个运行插件。它把选题、创作、知识、热点、项目进度和受控发布入口放进同一界面；Agent 可在后台继续运行，用户通过“会话”入口恢复完整官方界面。
 
-安装：`npx @deepseek-ai/dsh plugin --profile web add github:MuziGeek/dsh-muzi-creator`（本地开发用目录路径）
+安装：`npx @deepseek-ai/dsh plugin --profile web add github:Cen-Yaozu/dsh-azu-creator`（本地开发用目录路径）
 
-卸载：`npx @deepseek-ai/dsh plugin --profile web remove dsh-muzi-creator`
+卸载：`npx @deepseek-ai/dsh plugin --profile web remove dsh-azu-creator`
 
 插件对官方侧栏的替换只写在项目自己的 `cordis.patch.yml`，通过 `package.json` 的 `dsh.bundle.patch` 随包安装。不要把这段配置写进用户的 `~/.dsh/profiles/web/cordis.patch.yml`；用户层不会跟随插件卸载，残留后会把官方侧栏继续关掉。
 

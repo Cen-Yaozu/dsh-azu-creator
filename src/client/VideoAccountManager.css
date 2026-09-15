@@ -1,5 +1,5 @@
 .videoAccountManager { width: 100%; min-width: 0; box-sizing: border-box; container: video-accounts / inline-size; padding-block: 12px; color: var(--muzi-island-text); }
-[data-plugin="dsh-muzi-creator"] .muziWorkbenchContent.detail > .videoAccountManager { flex: 1; min-height: 0; padding: 24px; overflow-y: auto; overscroll-behavior: contain; }
+[data-plugin="dsh-azu-creator"] .muziWorkbenchContent.detail > .videoAccountManager { flex: 1; min-height: 0; padding: 24px; overflow-y: auto; overscroll-behavior: contain; }
 .videoAccountHeading, .videoAccountIdentity, .videoAccountActions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .videoAccountHeading { justify-content: space-between; align-items: flex-start; }
 .videoAccountHeading > div { min-width: 0; flex: 1 1 240px; }
@@ -46,7 +46,7 @@
   .videoIssueList > li > .videoAccountActions { max-width: none; }
 }
 @container muzi-workbench (width < 640px) {
-  [data-plugin="dsh-muzi-creator"] .muziWorkbenchContent.detail > .videoAccountManager { padding: 16px; }
+  [data-plugin="dsh-azu-creator"] .muziWorkbenchContent.detail > .videoAccountManager { padding: 16px; }
 }
 
 .videoAccountManagementModal > div { box-sizing: border-box; padding-inline: clamp(24px, 8vw, 48px); }

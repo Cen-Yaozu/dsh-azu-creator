@@ -5,7 +5,7 @@ import { scopeAnimalStyles } from '../scripts/scope-animal-styles.ts';
 describe('built-in appearance ownership', () => {
   it('confines library defaults and component rules to owned roots', () => {
     const scoped = scopeAnimalStyles(':root { --animal-bg-color: red; } .control { color: blue; }');
-    expect(scoped).toContain('@scope ([data-plugin="dsh-muzi-creator"], [data-plugin-modal="dsh-muzi-creator"])');
+    expect(scoped).toContain('@scope ([data-plugin="dsh-azu-creator"], [data-plugin="dsh-muzi-creator"], [data-plugin-modal="dsh-azu-creator"], [data-plugin-modal="dsh-muzi-creator"])');
     expect(scoped).not.toContain(':root');
     expect(scoped).toContain(':where(:scope)');
   });

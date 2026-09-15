@@ -7,7 +7,7 @@ afterEach(() => { for (const stop of stops.splice(0)) stop(); document.body.inne
 const settle = () => new Promise(resolve => setTimeout(resolve, 0));
 
 function shell() {
-  document.body.innerHTML = '<div data-plugin="dsh-muzi-creator" data-surface="sidebar"><div class="logoRow"></div><div data-sidebar-menu><div role="tablist">会话 热点 灵感 内容 知识 项目</div><div data-sidebar-community-entries></div></div><div class="regionArea"></div></div>';
+  document.body.innerHTML = '<div data-plugin="dsh-azu-creator" data-surface="sidebar"><div class="logoRow"></div><div data-sidebar-menu><div role="tablist">会话 热点 灵感 内容 知识 项目</div><div data-sidebar-community-entries></div></div><div class="regionArea"></div></div>';
   return { root: document.body.firstElementChild!, host: document.querySelector('[data-sidebar-community-entries]')! };
 }
 

@@ -1,4 +1,4 @@
-const ROOT = '[data-plugin="dsh-muzi-creator"][data-surface="sidebar"]';
+const ROOT = '[data-plugin="dsh-azu-creator"][data-surface="sidebar"], [data-plugin="dsh-muzi-creator"][data-surface="sidebar"]';
 const ENTRY = 'button[data-dsh-plugin][data-dsh-part="sidebar-entry"][aria-label]';
 const KNOWN = new Set(['ssh', 'skill-explorer', 'task-board']);
 

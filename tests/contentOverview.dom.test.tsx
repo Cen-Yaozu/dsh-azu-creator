@@ -27,7 +27,7 @@ function renderOverview(options: Partial<ComponentProps<typeof ContentOverview>>
   const onOpenDocument = vi.fn();
   const onOpenProduction = vi.fn();
   const onManagePublish = vi.fn();
-  render(<div data-plugin="dsh-muzi-creator"><ContentOverview
+  render(<div data-plugin="dsh-azu-creator"><ContentOverview
     project={contentOverviewProject()}
     production={contentOverviewProduction()}
     productionError={null}
@@ -44,7 +44,7 @@ function renderOverview(options: Partial<ComponentProps<typeof ContentOverview>>
 describe("ContentOverview", () => {
   it("opens account management from the content overview even with no projects", () => {
     const onManageAccounts = vi.fn();
-    render(<div data-plugin="dsh-muzi-creator"><WorkbenchContentOverview result={{ items: [] } as never} onSelect={vi.fn()} onManageAccounts={onManageAccounts} /></div>);
+    render(<div data-plugin="dsh-azu-creator"><WorkbenchContentOverview result={{ items: [] } as never} onSelect={vi.fn()} onManageAccounts={onManageAccounts} /></div>);
     fireEvent.click(screen.getByRole("button", { name: "账号管理" }));
     expect(onManageAccounts).toHaveBeenCalledOnce();
     expect(screen.getByText("还没有创作项目")).toBeTruthy();

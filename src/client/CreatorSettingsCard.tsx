@@ -266,7 +266,7 @@ export function CreatorSettingsCard({
   };
 
   return (
-    <li data-plugin="dsh-muzi-creator" data-surface="settings-card" className={open ? "card open" : "card"}>
+    <li data-plugin="dsh-azu-creator" data-surface="settings-card" className={open ? "card open" : "card"}>
       <button
         type="button"
         className="header"

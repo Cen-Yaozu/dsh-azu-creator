@@ -21,8 +21,8 @@ describe("previewServers", () => {
   });
 
   it("uses the shared data-directory resolver for the default registry", () => {
-    const home = mkdtempSync(join(tmpdir(), "dsh-mz-preview-home-"));
-    expect(previewRegistryPath(home)).toBe(join(home, ".dsh-mz-creator", "preview-servers.json"));
+    const home = mkdtempSync(join(tmpdir(), "dsh-azu-preview-home-"));
+    expect(previewRegistryPath(home)).toBe(join(home, ".dsh-azu-creator", "preview-servers.json"));
 
     const legacy = join(home, ".dsh-oil-creator");
     mkdirSync(legacy);

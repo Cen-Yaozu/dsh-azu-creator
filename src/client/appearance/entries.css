@@ -1,4 +1,4 @@
-html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[data-muzi-entry] {
+html[data-muzi-workbench-appearance] [data-plugin="dsh-azu-creator"] button[data-muzi-entry] {
   position: relative;
   display: flex;
   align-items: center;
@@ -20,19 +20,19 @@ html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[dat
   font: 600 14px/21px var(--muzi-island-font);
   text-align: center;
 }
-html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[data-muzi-entry]:hover {
+html[data-muzi-workbench-appearance] [data-plugin="dsh-azu-creator"] button[data-muzi-entry]:hover {
   background: var(--muzi-island-leaf-soft);
 }
-html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[data-muzi-entry]:is([data-active]:not([data-active="false"]), [aria-selected="true"], [aria-pressed="true"], [aria-current="page"]) {
+html[data-muzi-workbench-appearance] [data-plugin="dsh-azu-creator"] button[data-muzi-entry]:is([data-active]:not([data-active="false"]), [aria-selected="true"], [aria-pressed="true"], [aria-current="page"]) {
   background: var(--muzi-island-leaf);
   color: var(--muzi-island-accent-ink);
   border-color: var(--muzi-island-leaf);
 }
-html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[data-muzi-entry]:focus-visible {
+html[data-muzi-workbench-appearance] [data-plugin="dsh-azu-creator"] button[data-muzi-entry]:focus-visible {
   outline: 2px solid var(--muzi-island-focus);
   outline-offset: -2px;
 }
-html[data-muzi-workbench-appearance] [data-plugin="dsh-muzi-creator"] button[data-muzi-entry]:is(:disabled, [aria-disabled="true"]) {
+html[data-muzi-workbench-appearance] [data-plugin="dsh-azu-creator"] button[data-muzi-entry]:is(:disabled, [aria-disabled="true"]) {
   opacity: .5;
   cursor: not-allowed;
 }

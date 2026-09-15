@@ -158,7 +158,7 @@ describe("Daily Hot client model", () => {
 describe("Daily Hot UI contract", () => {
   it("places Hot second and wires accessible list and disclosure behavior", async () => {
     const [sidebar, panel] = await Promise.all([
-      readFile(new URL("../src/client/sidebar/MzSidebarRoot.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../src/client/sidebar/AzSidebarRoot.tsx", import.meta.url), "utf8"),
       readFile(new URL("../src/client/sidebar/DailyHotPanel.tsx", import.meta.url), "utf8"),
     ]);
     const sessions = sidebar.indexOf('data-sidebar-tab="sessions"');

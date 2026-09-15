@@ -12,7 +12,7 @@ describe("theme-aware modal dismissal", () => {
     const close = vi.fn();
     const view = render(<IslandModal open title="保留本地文件" onClose={close} footer={<button>取消</button>}><p>内容仍会保留。</p></IslandModal>);
     const dialog = screen.getByRole("dialog");
-    expect(dialog.getAttribute("data-plugin-modal")).toBe("dsh-muzi-creator");
+    expect(dialog.getAttribute("data-plugin-modal")).toBe("dsh-azu-creator");
     expect(document.activeElement).toBe(screen.getByRole("button", { name: "取消" }));
     const event = new Event("cancel", { cancelable: true });
     fireEvent(dialog, event);

@@ -35,7 +35,7 @@ export function DailyHotInspector({ t }: DailyHotInspectorProps) {
 
   return (
     <article
-      data-plugin="dsh-muzi-creator"
+      data-plugin="dsh-azu-creator"
       data-surface="daily-hot-inspector"
       aria-label={t("hot.detail")}
     >

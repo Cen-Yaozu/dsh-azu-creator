@@ -125,7 +125,7 @@ import type {
   StartInspirationResearchResult,
   StopInspirationRunRequest,
 } from "./inspirationTypes.ts";
-import { MuziCreatorService } from "./muziService.ts";
+import { AzuCreatorService, MuziCreatorService } from "./azuService.ts";
 import { VideoPublisherService } from "./videoPublisher.ts";
 import { TrellisGithubService } from "./trellisGithubService.ts";
 import type { GithubRequest, GithubResult } from "./trellisGithubSchemas.ts";
@@ -180,7 +180,7 @@ import type {
   PendingKnowledgeListRequest,
   PendingKnowledgeListResult,
   PendingKnowledgeReference,
-} from "./muziTypes.ts";
+} from "./azuTypes.ts";
 import type { VideoPublishCapabilitiesResult } from "./videoCapabilities.ts";
 import type {
   BindStudioRequest,
@@ -221,7 +221,8 @@ import type {
   WaitExportRequest,
 } from "./types.ts";
 
-export const MZ_CREATOR_SERVICE = "mzCreator";
+export const AZU_CREATOR_SERVICE = "azuCreator";
+export const MZ_CREATOR_SERVICE = AZU_CREATOR_SERVICE;
 
 export class MzCreatorService extends TypertRemoteService {
   // Gateway calls methods on a Cordis proxy; `#private` fields throw on that receiver.
@@ -260,7 +261,7 @@ export class MzCreatorService extends TypertRemoteService {
     ctx: Context,
     config: Config,
   ) {
-    super(ctx, MZ_CREATOR_SERVICE);
+    super(ctx, AZU_CREATOR_SERVICE);
     this.libraryRoot = resolveUserPath(config.libraryRoot);
     this.dataDir = resolveUserPath(resolveDataDir(config));
     this.subtitleSkillDirConfig = config.subtitleSkillDir;
@@ -480,13 +481,13 @@ export class MzCreatorService extends TypertRemoteService {
 
   async beginMuziVideoAcceptance(request: VideoAcceptanceBeginRequest, signal: AbortSignal): Promise<VideoAcceptanceSessionResult> {
     if (request.capability !== "metrics") throw new Error("发布能力验证由内容发布流程统一处理");
-    if (!this.externalActionsEnabled) throw new Error("Muzi Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。");
+    if (!this.externalActionsEnabled) throw new Error("Azu 工作台外部同步与发布默认关闭。请先在插件配置中显式启用。");
     return this.videoPublisher.beginAcceptance(request, signal);
   }
 
   async finalizeMuziVideoAcceptance(request: VideoAcceptanceFinalizeRequest, signal: AbortSignal): Promise<VideoAcceptanceFinalizeResult> {
     if (request.capability !== "metrics") throw new Error("发布能力验证由内容发布流程统一处理");
-    if (!this.externalActionsEnabled) throw new Error("Muzi Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。");
+    if (!this.externalActionsEnabled) throw new Error("Azu 工作台外部同步与发布默认关闭。请先在插件配置中显式启用。");
     return this.videoPublisher.finalizeAcceptance(request, signal);
   }
 
@@ -500,7 +501,7 @@ export class MzCreatorService extends TypertRemoteService {
   }
 
   async syncMuziVideoMetrics(request: VideoMetricsSyncRequest, signal: AbortSignal): Promise<VideoMetricsSyncResult> {
-    if (!this.externalActionsEnabled) throw new Error("Muzi Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。");
+    if (!this.externalActionsEnabled) throw new Error("Azu 工作台外部同步与发布默认关闭。请先在插件配置中显式启用。");
     const status = await this.videoPublisher.status({ id: request.id }, signal);
     const project = await this.muzi.getProject({ id: request.id });
     const requested = request.platforms ?? (["xiaohongshu", "douyin", "bilibili", "wechat"] as MuziVideoPlatform[]).filter((platform) => {
@@ -1153,7 +1154,7 @@ export class MzCreatorService extends TypertRemoteService {
 
   async syncPublish(request: SyncPublishRequest, signal: AbortSignal): Promise<SyncPublishResult> {
     signal.throwIfAborted();
-    if (!this.externalActionsEnabled) throw new Error("Muzi Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。");
+    if (!this.externalActionsEnabled) throw new Error("Azu 工作台外部同步与发布默认关闭。请先在插件配置中显式启用。");
     const configured = await loadOverlay(this.dataDir);
     const enabledPlatforms = configured.profile?.enabledPlatforms ?? emptyProfile().enabledPlatforms;
     if (request.platform !== undefined && !enabledPlatforms.includes(request.platform)) {
@@ -1175,7 +1176,7 @@ export class MzCreatorService extends TypertRemoteService {
         throw new Error(`${platform} 没有已验收的播放数据同步账号`);
       }
       if (candidates.length > 1) {
-        throw new Error(`${platform} 有多个已验收账号；旧版片库同步无法安全选择，请使用 Muzi Creator 项目同步`);
+        throw new Error(`${platform} 有多个已验收账号；旧版片库同步无法安全选择，请使用 Azu 工作台项目同步`);
       }
       return [platform, candidates[0]!.accountProfile];
     })) as Partial<Record<MuziVideoPlatform, string>>;

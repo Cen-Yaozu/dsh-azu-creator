@@ -28,7 +28,7 @@ export function IslandModal({ open, title, width = 480, maskClosable = true, foo
     aria-modal="true"
     aria-labelledby={title === undefined ? undefined : titleId}
     aria-label={title === undefined ? "对话框" : undefined}
-    data-plugin-modal="dsh-muzi-creator"
+    data-plugin-modal="dsh-azu-creator"
     className={["islandModal", className].filter(Boolean).join(" ")}
     style={{ width }}
     onCancel={(event) => { event.preventDefault(); onClose?.(); }}

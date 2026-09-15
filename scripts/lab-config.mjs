@@ -92,10 +92,10 @@ export function createProfileManifest(paths, name) {
   return {
     name,
     private: true,
-    dependencies: { "dsh-muzi-creator": `link:${paths.root.replaceAll("\\", "/")}` },
+    dependencies: { "dsh-azu-creator": `link:${paths.root.replaceAll("\\", "/")}` },
     dsh: {
       profile: {
-        bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-muzi-creator"],
+        bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-azu-creator"],
       },
     },
   };
@@ -108,7 +108,7 @@ export function createLabProfileManifest(paths) {
 export function createMuziProfilePatch(config, banner) {
   return [
     banner,
-    "- id: dsh-muzi-creator",
+    "- id: dsh-azu-creator",
     "  config:",
     `    libraryRoot: ${yamlString(config.libraryRoot)}`,
     `    creatorRoot: ${yamlString(config.creatorRoot)}`,

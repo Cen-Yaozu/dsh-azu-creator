@@ -85,7 +85,7 @@ import type {
   VideoAcceptanceFinalizeRequest,
   VideoAcceptanceFinalizeResult,
   VideoAcceptanceSessionResult,
-} from "../muziTypes.ts";
+} from "../azuTypes.ts";
 import type { VideoPublishCapabilitiesResult } from "../videoCapabilities.ts";
 import type {
   ArchiveTrellisTaskRequest,
@@ -114,7 +114,7 @@ import { CreatorSettingsCard } from "./CreatorSettingsCard.tsx";
 import type { CreatorViewFace, DailyHotViewFace, InspirationViewFace, MuziViewFace, TrellisViewFace } from "./face.ts";
 import { en, NS, type CreatorKey, zh } from "./locales.ts";
 import { inspirationEn, inspirationZh, type InspirationCopyKey } from "./inspiration/index.ts";
-import { MzSidebarRoot } from "./sidebar/MzSidebarRoot.tsx";
+import { AzSidebarRoot, MzSidebarRoot } from "./sidebar/AzSidebarRoot.tsx";
 import type { MzSidebarInjected, MzSidebarSlotProps } from "./sidebar/slots.ts";
 import {
   registerCreatorSettingsCard,
@@ -122,11 +122,12 @@ import {
 } from "./settingsSlot.ts";
 import { bumpTrellis } from "./trellisSelection.ts";
 import { createWorkbenchResources } from "./workbench/WorkbenchData.ts";
-import { MuziWorkbenchRoot } from "./workbench/MuziWorkbenchRoot.tsx";
+import { AzuWorkbenchRoot, MuziWorkbenchRoot } from "./workbench/AzuWorkbenchRoot.tsx";
 import { ConversationWorkbenchController } from "./workbench/conversationSlot.ts";
 
 declare module "@deepseek-ai/dsh-client-ui-slots" {
   interface LocaleNamespaceMap {
+    "dsh.azu.creator": CreatorKey | InspirationCopyKey;
     "dsh.mz.creator": CreatorKey | InspirationCopyKey;
   }
 }
@@ -281,7 +282,7 @@ export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NS, {
     zh: { ...zh, ...inspirationZh },
     en: { ...en, ...inspirationEn },
-  }), "dsh-muzi-creator: dictionaries");
+  }), "dsh-azu-creator: dictionaries");
   ctx.effect(() => {
     remountPluginCss();
     const releaseAppearance = mountWorkbenchAppearance(document);
@@ -290,9 +291,9 @@ export function apply(ctx: ClientContext): void {
       releasePluginCss();
       releaseShellChrome();
     };
-  }, "dsh-muzi-creator: chrome");
+  }, "dsh-azu-creator: chrome");
   const remoteOf = (): MzCreatorRemote | undefined =>
-    ctx.get("remote.mzCreator") as MzCreatorRemote | undefined;
+    (ctx.get("remote.azuCreator") ?? ctx.get("remote.mzCreator")) as MzCreatorRemote | undefined;
   const trellisRemoteOf = (): MzCreatorRemote | undefined => {
     const remote = remoteOf();
     return remote !== undefined
@@ -905,7 +906,7 @@ export function apply(ctx: ClientContext): void {
         return (await inspirationFace.serializeReference({ runId: runId as InspirationRun["id"] })).text;
       },
     );
-  }, "dsh-muzi-creator: content triggers");
+  }, "dsh-azu-creator: content triggers");
 
   const injectSidebar = (): MzSidebarInjected => ({
     startSession: async (workspaceId?: WorkspaceId) => {
@@ -1025,7 +1026,7 @@ export function apply(ctx: ClientContext): void {
         CreatorSettingsCard,
         {
           namespace: CREATOR_SETTINGS_NAMESPACE,
-          legacyId: "dsh-muzi-creator",
+          legacyId: "dsh-azu-creator",
           legacyOrder: 40,
           locale: NS,
           inject: () => ({
@@ -1060,5 +1061,5 @@ export function apply(ctx: ClientContext): void {
       stopSettingsTrigger();
       await disposeRemote();
     };
-  }, "dsh-muzi-creator: remote-view");
+  }, "dsh-azu-creator: remote-view");
 }

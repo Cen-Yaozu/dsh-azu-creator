@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="Muzi Creator 本地创作工作台：灵感与知识 → 本地主题目录 → 母内容与渠道稿件。">
+  <img src="./assets/readme/hero.svg" width="100%" alt="Azu Creator 本地创作工作台：灵感与知识 → 本地主题目录 → 母内容与渠道稿件。">
 </p>
 
-# Muzi Creator
+# Azu Creator
 
-**DeepSeek Harness 上的本地创作工作台。** 搜索灵感、回看知识、整理稿件与视频产物，在同一个界面查看内容和项目进度。
+**DeepSeek Harness 上的 Azu 个人创作工作台。** 搜索灵感、回看知识、整理稿件与视频产物，在同一个界面查看内容和项目进度。
 
 [界面示例](#界面示例) · [开始使用](#开始使用) · [工作台导航](#六个入口各自保留上下文) · [灵感搜索](docs/inspiration.md) · [完整使用说明](docs/usage.md)
 
@@ -75,7 +75,7 @@
 ### 1. 安装到 `web` 配置
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add github:MuziGeek/dsh-muzi-creator
+npx @deepseek-ai/dsh plugin --profile web add github:Cen-Yaozu/dsh-azu-creator
 ```
 
 安装后重启 DSH，并选择安装插件的 **`web` 配置**。如果桌面端仍选中 `desktop`，不会加载这个配置中的个人工作台。
@@ -89,8 +89,8 @@ npx @deepseek-ai/dsh plugin --profile web add github:MuziGeek/dsh-muzi-creator
 <summary>从源码安装</summary>
 
 ```bash
-git clone https://github.com/MuziGeek/dsh-muzi-creator.git
-cd dsh-muzi-creator
+git clone https://github.com/Cen-Yaozu/dsh-azu-creator.git
+cd dsh-azu-creator
 pnpm install --frozen-lockfile
 pnpm build
 npx @deepseek-ai/dsh plugin --profile web add "$PWD"
@@ -99,7 +99,7 @@ npx @deepseek-ai/dsh plugin --profile web add "$PWD"
 仅在安装工具明确提示插件构建被阻止时，按提示授权该包构建：
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add --allow-build=dsh-muzi-creator github:MuziGeek/dsh-muzi-creator
+npx @deepseek-ai/dsh plugin --profile web add --allow-build=dsh-azu-creator github:Cen-Yaozu/dsh-azu-creator
 ```
 
 </details>
@@ -186,7 +186,7 @@ Creator Studio 保存正文和明确状态，Muzi Atlas 提供只读知识。内
 
 灵感历史和内容卡片可在确认后从工作台删除，本地目录、稿件和报告文件保留。灵感报告操作默认直接显示，无需展开。
 
-- **正文留在本地**：普通文件保存创作正文和媒体产物；插件的兼容配置与界面状态以有效 `dataDir` 为准，新安装默认使用 `~/.dsh-mz-creator`，已有目录配置继续保留。
+- **正文留在本地**：普通文件保存创作正文和媒体产物；插件的兼容配置与界面状态以有效 `dataDir` 为准，新安装默认使用 `~/.dsh-azu-creator`，兼容回退 `~/.dsh-mz-creator` 与旧版目录，已有目录配置继续保留。
 - **知识保持只读**：插件不写入 Atlas。灵感报告保存到 Creator Studio 的 `00-inbox/inspirations`，保留正文与 SHA-256 校验。
 - **搜索范围明确**：灵感专用 Agent 访问公开 HTTP(S) 页面与只读知识接口，不能执行 Shell、修改项目、创建内容或发布。
 - **上传与发布默认关闭**：账号连接独立授权，不会打开 `externalActionsEnabled`。启用外部操作后，准备上传、最终提交和数据同步仍分别确认，每个平台的提交授权只使用一次。
@@ -207,13 +207,13 @@ pnpm check
 - [实现与兼容性](docs/implementation.md)
 - [内置外观与换肤迁移](docs/theme-skin.md) · [图标与资源](docs/iconography.md)
 - [界面设计](DESIGN.md) · [产品说明](PRODUCT.md)
-- [反馈问题](https://github.com/MuziGeek/dsh-muzi-creator/issues)
+- [反馈问题](https://github.com/Cen-Yaozu/dsh-azu-creator/issues)
 
 <details>
 <summary>卸载与旧配置清理</summary>
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web remove dsh-muzi-creator
+npx @deepseek-ai/dsh plugin --profile web remove dsh-azu-creator
 ```
 
 操作后重启对应配置。不要复制项目的 `cordis.patch.yml` 到用户配置；插件自带的 bundle patch 负责装配和清理。若旧版本曾在用户 patch 中手动禁用 `ui-sidebar`，需清理那条遗留配置，避免卸载后官方侧栏仍被关闭。

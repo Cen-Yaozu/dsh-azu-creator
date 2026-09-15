@@ -45,7 +45,7 @@ it("offers public repository selection while explaining the unavailable GitHub A
     ...(request.action === "branches" ? { branches: ["main", "development"] } : {}),
     ...(request.action === "connect" ? { message: "Connected sample/project" } : {}),
   }));
-  render(<div data-plugin="dsh-muzi-creator"><TrellisGithubSources face={{ github }} t={(key) => zh[key]} /></div>);
+  render(<div data-plugin="dsh-azu-creator"><TrellisGithubSources face={{ github }} t={(key) => zh[key]} /></div>);
   await screen.findByText(zh["github.setup"]);
   expect((screen.getByRole("button", { name: zh["github.bind"] }) as HTMLButtonElement).disabled).toBe(true);
   fireEvent.change(screen.getByRole("textbox", { name: zh["github.query"] }), { target: { value: "https://github.com/sample/project" } });

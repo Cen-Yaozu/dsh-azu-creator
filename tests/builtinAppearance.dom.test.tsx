@@ -33,7 +33,7 @@ it('mounts stylesheet resources only during the client effect and releases them 
 });
 
 it('adapts dynamic semantic entries while preserving identity, actions, names and external tooltips', async () => {
-  document.body.innerHTML = '<div data-plugin="dsh-muzi-creator" data-surface="sidebar"></div><button id="outside" data-dsh-plugin="other" data-dsh-part="sidebar-entry" aria-label="Outside"><span><svg></svg></span><span>Outside</span></button>';
+  document.body.innerHTML = '<div data-plugin="dsh-azu-creator" data-surface="sidebar"></div><button id="outside" data-dsh-plugin="other" data-dsh-part="sidebar-entry" aria-label="Outside"><span><svg></svg></span><span>Outside</span></button>';
   const root = document.querySelector('div')!;
   const stop = mountWorkbenchAppearance(document);
   const entry = document.createElement('button');

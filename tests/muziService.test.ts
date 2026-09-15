@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -137,7 +137,7 @@ describe("muzi.creator/2", () => {
     const after = await service.revision();
     expect(after).not.toBe(before);
     const location = await service.documentLocation({ id: created.id, document: "mother" });
-    expect(location.path).toBe(join(projectRoot, "mother-content.md"));
+    expect(location.path).toBe(await realpath(join(projectRoot, "mother-content.md")));
     expect(location.obsidianReady).toBe(false);
     expect(location.obsidianUri).toBeNull();
     expect(location.message).toContain("独立仓库");

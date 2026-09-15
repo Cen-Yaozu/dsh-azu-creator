@@ -1,0 +1,130 @@
+import { describe, expect, it, vi } from "vitest";
+
+import { registerAzuTools } from "../src/azuTools.ts";
+import type { MzCreatorService } from "../src/service.ts";
+
+interface CapturedTool {
+  name: string;
+  execute: (args: Record<string, unknown>, exec: { signal: AbortSignal }) => unknown;
+}
+
+function saveTool(content: string) {
+  const tools: CapturedTool[] = [];
+  const saveMuziDocument = vi.fn(async () => ({ title: "saved" }));
+  const service = {
+    getMuziProject: vi.fn(async () => ({ content: { mother: content } })),
+    saveMuziDocument,
+  } as unknown as MzCreatorService;
+  registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, service);
+  return { tool: tools.find((tool) => tool.name === "muzi_creator_save")!, saveMuziDocument };
+}
+
+const SAVE_ARGS = {
+  id: `mc_${"1".repeat(24)}`,
+  document: "mother",
+  text: "new text",
+  status: "draft",
+  expectedRevision: 1,
+  confirmed: true,
+};
+
+describe("Azu Creator save tool", () => {
+  it("writes an empty target after the explicit generation flow", async () => {
+    const { tool, saveMuziDocument } = saveTool("");
+    await expect(tool.execute(SAVE_ARGS, { signal: new AbortController().signal })).resolves.toMatchObject({ title: "saved" });
+    expect(saveMuziDocument).toHaveBeenCalledOnce();
+  });
+
+  it("requires overwrite confirmation for non-empty documents", async () => {
+    const { tool, saveMuziDocument } = saveTool("existing");
+    await expect(tool.execute(SAVE_ARGS, { signal: new AbortController().signal })).rejects.toThrow("separate overwrite confirmation");
+    expect(saveMuziDocument).not.toHaveBeenCalled();
+    await expect(tool.execute({ ...SAVE_ARGS, overwriteConfirmed: true }, { signal: new AbortController().signal })).resolves.toMatchObject({ title: "saved" });
+  });
+});
+
+describe("Azu Creator video acceptance tools", () => {
+  it("reads capabilities without requiring an external-action tool flow", async () => {
+    const tools: CapturedTool[] = [];
+    const getMuziVideoPublishCapabilities = vi.fn(async () => ({ schema: "muzi.video-publisher.capabilities/1", accounts: [] }));
+    const service = { getMuziVideoPublishCapabilities } as unknown as MzCreatorService;
+    registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, service);
+    const tool = tools.find((item) => item.name === "muzi_creator_video_publish_capabilities")!;
+    await expect(tool.execute({}, { signal: new AbortController().signal })).resolves.toMatchObject({ accounts: [] });
+    expect(getMuziVideoPublishCapabilities).toHaveBeenCalledOnce();
+  });
+
+  it("forwards a bound metrics acceptance request without treating it as publication authority", async () => {
+    const tools: CapturedTool[] = [];
+    const beginMuziVideoAcceptance = vi.fn(async () => ({
+      ok: true,
+      sessionId: "vas-0123456789abcdef01234567",
+      durableAcceptanceWritten: false,
+      ordinaryAuthorizationIssued: false,
+    }));
+    const service = { beginMuziVideoAcceptance } as unknown as MzCreatorService;
+    registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, service);
+    const tool = tools.find((item) => item.name === "muzi_creator_begin_video_acceptance")!;
+    await expect(tool.execute({
+      id: `mc_${"1".repeat(24)}`,
+      expectedRevision: 1,
+      platform: "xiaohongshu",
+      accountProfile: "xiaohongshu-main",
+      capability: "metrics",
+      expectedAccountLabel: "验收账号",
+      confirmed: true,
+    }, { signal: new AbortController().signal })).resolves.toMatchObject({ durableAcceptanceWritten: false, ordinaryAuthorizationIssued: false });
+    expect(beginMuziVideoAcceptance).toHaveBeenCalledWith(expect.objectContaining({
+      platform: "xiaohongshu",
+      accountProfile: "xiaohongshu-main",
+      capability: "metrics",
+      confirmed: true,
+    }), expect.any(AbortSignal));
+  });
+
+  it("forwards a single non-prepare acceptance finalization to the service", async () => {
+    const tools: CapturedTool[] = [];
+    const finalizeMuziVideoAcceptance = vi.fn(async () => ({ capability: "metrics" }));
+    const service = { finalizeMuziVideoAcceptance } as unknown as MzCreatorService;
+    registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, service);
+    const tool = tools.find((item) => item.name === "muzi_creator_finalize_video_acceptance")!;
+    await expect(tool.execute({
+      id: `mc_${"1".repeat(24)}`,
+      expectedRevision: 1,
+      platform: "xiaohongshu",
+      capability: "metrics",
+      acceptanceSessionId: "vas-0123456789abcdef01234567",
+      confirmed: true,
+    }, { signal: new AbortController().signal })).resolves.toMatchObject({ capability: "metrics" });
+    expect(finalizeMuziVideoAcceptance).toHaveBeenCalledWith(expect.objectContaining({ capability: "metrics" }), expect.any(AbortSignal));
+  });
+
+  it("does not expose legacy preparation or final submission tools", () => {
+    const tools: CapturedTool[] = [];
+    registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, {} as MzCreatorService);
+    expect(tools.some(tool => ["muzi_creator_prepare_video_publish", "muzi_creator_commit_video_publish"].includes(tool.name))).toBe(false);
+  });
+
+  it("keeps metrics acceptance bound to one registered account", async () => {
+    const tools: CapturedTool[] = [];
+    const syncMuziVideoMetrics = vi.fn(async () => ({ acceptanceSessionStatus: "METRICS_COLLECTED", platforms: [] }));
+    const service = { syncMuziVideoMetrics } as unknown as MzCreatorService;
+    registerAzuTools({ tools: { register(tool) { tools.push(tool as unknown as CapturedTool); } } }, service);
+    const tool = tools.find((item) => item.name === "muzi_creator_sync_video_metrics")!;
+    await expect(tool.execute({
+      id: `mc_${"1".repeat(24)}`,
+      expectedRevision: 1,
+      platforms: ["xiaohongshu"],
+      force: true,
+      confirmed: true,
+      acceptanceSessionId: "vas-0123456789abcdef01234567",
+      acceptanceAccountProfile: "xiaohongshu-main",
+    }, { signal: new AbortController().signal })).resolves.toMatchObject({ acceptanceSessionStatus: "METRICS_COLLECTED" });
+    expect(syncMuziVideoMetrics).toHaveBeenCalledWith(expect.objectContaining({
+      platforms: ["xiaohongshu"],
+      force: true,
+      acceptanceSessionId: "vas-0123456789abcdef01234567",
+      acceptanceAccountProfile: "xiaohongshu-main",
+    }), expect.any(AbortSignal));
+  });
+});

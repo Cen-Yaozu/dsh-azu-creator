@@ -1,7 +1,8 @@
 import type { ContentFilter } from "../types.ts";
 
-export const CREATOR_STORAGE_KEY = "dsh-muzi-creator/ui/v3";
-export const LEGACY_CREATOR_STORAGE_KEY = "dsh-muzi-creator/ui/v2";
+export const CREATOR_STORAGE_KEY = "dsh-azu-creator/ui/v3";
+export const LEGACY_CREATOR_STORAGE_KEY = "dsh-muzi-creator/ui/v3";
+export const OLD_LEGACY_CREATOR_STORAGE_KEY = "dsh-muzi-creator/ui/v2";
 
 export type SidebarTab = "sessions" | "hot" | "inspiration" | "content" | "knowledge" | "projects";
 
@@ -134,7 +135,7 @@ export function loadCreatorUiState(storage: CreatorStorage | undefined): Creator
   if (storage === undefined) return { ...DEFAULT_UI_STATE, selections: { ...DEFAULT_SELECTIONS } };
   try {
     const currentRaw = storage.getItem(CREATOR_STORAGE_KEY);
-    const raw = currentRaw ?? storage.getItem(LEGACY_CREATOR_STORAGE_KEY);
+    const raw = currentRaw ?? storage.getItem(LEGACY_CREATOR_STORAGE_KEY) ?? storage.getItem(OLD_LEGACY_CREATOR_STORAGE_KEY);
     if (raw === null) return { ...DEFAULT_UI_STATE, selections: { ...DEFAULT_SELECTIONS } };
     const parsed: unknown = JSON.parse(raw);
     if (!isRecord(parsed)) return { ...DEFAULT_UI_STATE, selections: { ...DEFAULT_SELECTIONS } };

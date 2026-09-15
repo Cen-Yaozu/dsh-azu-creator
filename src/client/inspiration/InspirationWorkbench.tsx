@@ -321,7 +321,7 @@ export function InspirationWorkbench({
     return (
       <div
         className="inspirationWorkbench"
-        data-plugin="dsh-muzi-creator"
+        data-plugin="dsh-azu-creator"
         data-surface="inspiration-workbench"
       >
         <section className="inspirationDetail" aria-live="polite">
@@ -463,7 +463,7 @@ export function InspirationWorkbench({
   return (
     <div
       className="inspirationWorkbench"
-      data-plugin="dsh-muzi-creator"
+      data-plugin="dsh-azu-creator"
       data-surface="inspiration-workbench"
     >
       <section className="inspirationCapture">

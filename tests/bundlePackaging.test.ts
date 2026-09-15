@@ -60,13 +60,13 @@ describe("DeepSeek Harness bundle packaging", () => {
     expect(manifest.engines?.node).toBe(">=22.19.0");
     expect(manifest.repository).toEqual({
       type: "git",
-      url: "git+https://github.com/MuziGeek/dsh-muzi-creator.git",
+      url: "git+https://github.com/Cen-Yaozu/dsh-azu-creator.git",
     });
     expect(manifest.bugs?.url).toBe(
-      "https://github.com/MuziGeek/dsh-muzi-creator/issues",
+      "https://github.com/Cen-Yaozu/dsh-azu-creator/issues",
     );
     expect(manifest.homepage).toBe(
-      "https://github.com/MuziGeek/dsh-muzi-creator#readme",
+      "https://github.com/Cen-Yaozu/dsh-azu-creator#readme",
     );
     expect(manifest.dsh?.client?.inject).toEqual(expect.arrayContaining([
       "@deepseek-ai/dsh-client-ui-settings",
@@ -78,7 +78,7 @@ describe("DeepSeek Harness bundle packaging", () => {
       .toBe("0.1.2-alpha.1");
     const normalizedPatch = patch.replaceAll("\r\n", "\n");
     expect(normalizedPatch).toMatch(/^- id: ui-sidebar\n  disabled: true$/m);
-    expect(normalizedPatch).toMatch(/^- insert:\n    - id: dsh-muzi-creator\n      name: dsh-muzi-creator$/m);
+    expect(normalizedPatch).toMatch(/^- insert:\n    - id: dsh-azu-creator\n      name: dsh-azu-creator$/m);
     expect(copyInplace).not.toContain(".dsh/profiles");
     expect(copyInplace).toContain("libDirectory");
     expect(releaseCheck).toContain("function execCommand(command, args, options)");
@@ -97,7 +97,7 @@ describe("DeepSeek Harness bundle packaging", () => {
     );
 
     expect(readme).toContain("plugin --profile web add");
-    expect(readme).toContain("dsh plugin --profile web remove dsh-muzi-creator");
+    expect(readme).toContain("dsh plugin --profile web remove dsh-azu-creator");
     expect(implementation).toContain("dsh.bundle.patch");
     expect(implementation).not.toContain(
       "`~/.dsh/profiles/web/package.json` 里的 `file:` 依赖",
@@ -105,7 +105,7 @@ describe("DeepSeek Harness bundle packaging", () => {
   });
 
   it("keeps README assets and runtime files in the real npm tarball", () => {
-    const packDirectory = mkdtempSync(join(tmpdir(), "dsh-muzi-creator-pack-"));
+    const packDirectory = mkdtempSync(join(tmpdir(), "dsh-azu-creator-pack-"));
     const runtimeFiles = [
       "lib/index.js",
       "lib/client.js",

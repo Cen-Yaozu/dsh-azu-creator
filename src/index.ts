@@ -10,13 +10,14 @@ import { registerLibraryPrompt } from "./libraryPrompt.ts";
 import { MzCreatorService } from "./service.ts";
 import { registerCreatorSettingsNamespace } from "./settingsHost.ts";
 import { registerCreatorTools } from "./tools.ts";
-import { registerMuziTools } from "./muziTools.ts";
+import { registerAzuTools, registerMuziTools } from "./azuTools.ts";
 import { registerPublishFlowTools } from "./publishFlowTools.ts";
 import { registerInspirationTools } from "./inspirationTools.ts";
 import { externalActionApprovalReason, externalActionKind } from "./externalActions.ts";
 import { restrictInspirationTools, type InspirationToolAgent } from "./inspirationToolScope.ts";
+import { registerModelsRoutes } from "./modelsRoute.ts";
 
-export const name = "dsh-muzi-creator";
+export const name = "dsh-azu-creator";
 export const inject = ["settings", "subprocess"];
 export { Config };
 export type { Config as ConfigType } from "./config.ts";
@@ -108,7 +109,7 @@ export function apply(ctx: Context, config: Config): void {
   const service = new MzCreatorService(ctx, config);
   ctx.inject(["tools"], (toolsCtx) => {
     registerCreatorTools(toolsCtx as never, service);
-    registerMuziTools(toolsCtx as never, service);
+    registerAzuTools(toolsCtx as never, service);
     registerPublishFlowTools(toolsCtx as never, service);
     registerInspirationTools(toolsCtx as never, service.inspiration);
   });
@@ -119,7 +120,7 @@ export function apply(ctx: Context, config: Config): void {
     const action = externalActionKind(request.name);
     if (action === null) return next();
     if (action !== "connection" && !service.externalActionsEnabled) {
-      return { kind: "deny" as const, reason: "Muzi Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。" };
+      return { kind: "deny" as const, reason: "Azu Creator 外部同步与发布默认关闭。请先在插件配置中显式启用。" };
     }
     return { kind: "ask" as const, reason: externalActionApprovalReason(action) };
   });
@@ -135,6 +136,11 @@ export function apply(ctx: Context, config: Config): void {
       return () => {
         service.inspiration.dispose();
       };
-    }, "muzi-inspiration: runtime");
+    }, "azu-inspiration: runtime");
+  });
+  ctx.inject(["webServer"], (serverCtx) => {
+    serverCtx.effect(() => {
+      return registerModelsRoutes(serverCtx);
+    }, "azu-models-route");
   });
 }

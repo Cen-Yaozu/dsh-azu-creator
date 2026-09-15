@@ -114,8 +114,8 @@ import {
   trellisProjectListResultSchema,
 } from "./trellisSchemas.ts";
 
-export const PACKAGE_NAME = "dsh-muzi-creator";
-export const REMOTE_NAMESPACE = "mzCreator";
+export const PACKAGE_NAME = "dsh-azu-creator";
+export const REMOTE_NAMESPACE = "azuCreator";
 
 const emptyObjectSchema = z.object({});
 
@@ -154,7 +154,7 @@ function invocation(
   };
 }
 
-export const MZ_CREATOR_INVOCATIONS: readonly InvocationDescriptor[] = [
+export const AZU_CREATOR_INVOCATIONS: readonly InvocationDescriptor[] = [
   invocation("listContents", listContentsRequestSchema, listContentsResultSchema),
   invocation("getContent", idRequestSchema, contentDetailSchema),
   invocation("getCoverThumb", idRequestSchema, coverThumbResultSchema),
@@ -247,3 +247,5 @@ export const MZ_CREATOR_INVOCATIONS: readonly InvocationDescriptor[] = [
   invocation("prepareTrellisTaskArchive", prepareTrellisTaskArchiveRequestSchema, trellisArchivePreviewSchema),
   invocation("archiveTrellisTask", archiveTrellisTaskRequestSchema, trellisArchiveResultSchema),
 ];
+
+export const MZ_CREATOR_INVOCATIONS = AZU_CREATOR_INVOCATIONS;

@@ -114,7 +114,7 @@ function formatWindow(window: InspirationTimeWindow | undefined): string {
 function promptFor(run: InspirationRun): string {
   const sourceTarget = run.spec.depth === "quick" ? "4–6" : run.spec.depth === "standard" ? "8–12" : "12–20";
   return [
-    "你是受限的 Muzi Creator 灵感研究员。请用中文提交结构化报告。",
+    "你是受限的 Azu 工作台灵感研究员。请用中文提交结构化报告。",
     `研究类型：${run.spec.mode === "trend" ? "全网综合趋势研究" : "主题研究"}`,
     `研究主题：${run.spec.topic}`,
     `实际时间窗：${formatWindow(run.timeWindow)}`,

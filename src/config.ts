@@ -78,11 +78,11 @@ export function resolveTrellisConfig(config: Config): TrellisConfig {
 }
 
 export function defaultCreatorRoot(): string {
-  return "D:\\Muzi\\Workspace\\creator-studio";
+  return "D:\\Azu\\Workspace\\creator-studio";
 }
 
 export function defaultAtlasRoot(): string {
-  return "D:\\Muzi\\Knowledge\\muzi-atlas";
+  return "D:\\Azu\\Knowledge\\azu-atlas";
 }
 
 export function defaultTrellisProjectsRoot(platform: NodeJS.Platform = process.platform): string {
@@ -92,10 +92,14 @@ export function defaultTrellisProjectsRoot(platform: NodeJS.Platform = process.p
 export function defaultLibraryRoot(platform: NodeJS.Platform = process.platform): string {
   if (platform === "win32") return join(defaultCreatorRoot(), "10-active");
   const videos = platform === "darwin" ? "Movies" : "Videos";
-  return join(homedir(), videos, "Muzi Creator");
+  return join(homedir(), videos, "Azu Creator");
 }
 
 export function defaultDataDir(home = homedir()): string {
+  return join(home, ".dsh-azu-creator");
+}
+
+export function mzDataDir(home = homedir()): string {
   return join(home, ".dsh-mz-creator");
 }
 
@@ -184,13 +188,17 @@ export function resolveDataDir(
   if (config.dataDir !== "") return config.dataDir;
 
   const legacy = legacyDataDir(home);
+  const mz = mzDataDir(home);
   const current = defaultDataDir(home);
-  if (existsSync(legacy) && existsSync(current)) {
+  if ((existsSync(legacy) || existsSync(mz)) && existsSync(current)) {
     throw new Error(
-      `检测到旧数据目录 ${legacy} 和新数据目录 ${current}；请在 dsh-muzi-creator 配置中显式设置 dataDir。`,
+      `检测到旧数据目录与新数据目录 ${current}；请在 dsh-azu-creator 配置中显式设置 dataDir。`,
     );
   }
-  return existsSync(legacy) ? legacy : current;
+  if (existsSync(current)) return current;
+  if (existsSync(mz)) return mz;
+  if (existsSync(legacy)) return legacy;
+  return current;
 }
 
 export function resolveConfiguredPath(configured: string, fallback: string, envValue?: string): string {
