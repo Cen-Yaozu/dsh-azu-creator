@@ -125,6 +125,7 @@ import { createWorkbenchResources } from "./workbench/WorkbenchData.ts";
 import { MuziWorkbenchRoot } from "./workbench/MuziWorkbenchRoot.tsx";
 import { ConversationWorkbenchController } from "./workbench/conversationSlot.ts";
 import { MAIN_PANEL_ID, selectCreatorPanel, type MainPanelLayout } from "./workbench/mainPanel.ts";
+import { ordinarySessionCreateOptions } from "./sessionCreation.ts";
 
 declare module "@deepseek-ai/dsh-client-ui-slots" {
   interface LocaleNamespaceMap {
@@ -947,14 +948,11 @@ export function apply(ctx: ClientContext): void {
   }, "dsh-muzi-creator: content triggers");
 
   const injectSidebar = (): MzSidebarInjected => ({
-    // Keep the current/recent workspace handoff when one exists. If none is
-    // available, create and open a real blank session without a workspace.
+    // Ordinary navigation only uses an explicitly selected workspace. Content
+    // handoffs keep their separate workspace requirement below.
     startSession: async (workspaceId?: WorkspaceId) => {
       const sessions = ctx.get("sessions") as unknown as FreshSessionsClient;
-      const targetWorkspaceId = workspaceId ?? handoffWorkspace();
-      const sessionId = await sessions.create(
-        targetWorkspaceId === undefined ? {} : { workspaceId: targetWorkspaceId },
-      );
+      const sessionId = await sessions.create(ordinarySessionCreateOptions(workspaceId));
       sessions.open(sessionId);
     },
     toggleSidebar: () => {

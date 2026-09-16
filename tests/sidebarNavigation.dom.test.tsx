@@ -93,6 +93,7 @@ describe("Muzi Creator sidebar navigation", () => {
     render(<MzSidebarRoot {...props} />);
     await user.click(screen.getByRole("button", { name: "session.new.label" }));
     expect(props.startSession).toHaveBeenCalledOnce();
+    expect(props.startSession).toHaveBeenCalledWith();
     expect(getSidebarTab()).toBe("sessions");
   });
 
