@@ -1,7 +1,69 @@
-[data-plugin="dsh-muzi-creator"] .cardWithActions { position: relative; min-width: 0; }
-[data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard { padding-right: 104px; width: 100%; box-sizing: border-box; }
-[data-plugin="dsh-muzi-creator"] .cardDeleteActions { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); max-width: calc(100% - 12px); }
-[data-plugin="dsh-muzi-creator"] .cardDeleteActions button { color: var(--muzi-island-paper-danger); }
+[data-plugin="dsh-muzi-creator"] .cardWithActions {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+[data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard {
+  width: 100%;
+  box-sizing: border-box;
+}
+[data-plugin="dsh-muzi-creator"] .cardDeleteActions {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 6px;
+  display: flex;
+  width: max-content;
+  z-index: 2;
+  max-inline-size: calc(100% - 12px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(6px, -50%, 0);
+  transition: opacity 140ms var(--animal-motion-ease, ease), transform 140ms var(--animal-motion-ease, ease);
+}
+[data-plugin="dsh-muzi-creator"] .cardWithActions:hover > .cardDeleteActions,
+[data-plugin="dsh-muzi-creator"] .cardWithActions:focus-within > .cardDeleteActions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, -50%, 0);
+}
+[data-plugin="dsh-muzi-creator"] .cardDeleteActions button {
+  background: var(--muzi-island-paper, var(--animal-bg-color));
+  border-radius: var(--animal-border-radius-sm, 16px);
+  color: var(--muzi-island-paper-danger);
+}
+
+@media (hover: none) {
+  [data-plugin="dsh-muzi-creator"] .cardDeleteActions {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-plugin="dsh-muzi-creator"] .cardDeleteActions { transition: none; }
+}
+
+/* Desktop may append the legacy skin stylesheet after plugin styles. Restore each card's own padding so the overlay never reserves action space. */
+html[data-dsh-skin="muzi-island"] [data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard.muziListRow {
+  padding: 12px;
+}
+
+html[data-dsh-skin="muzi-island"] [data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard.inspirationLedgerCard {
+  padding: 11px;
+}
+
+html[data-dsh-skin="muzi-island"] [data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard.workbenchOverviewCard {
+  padding: 12px 14px;
+}
+
+@media (max-width: 430px) {
+  html[data-dsh-skin="muzi-island"] [data-plugin="dsh-muzi-creator"] .cardWithActions > .islandSelectableCard.muziListRow {
+    padding: 10px;
+  }
+}
 
 .cardDeleteModalBody[data-plugin-modal="dsh-muzi-creator"] {
   display: grid;

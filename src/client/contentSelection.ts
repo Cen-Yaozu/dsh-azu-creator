@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import {
   browserCreatorStorage,
@@ -152,10 +152,13 @@ export function setSidebarTab(tab: SidebarTab): void {
   emitSelection();
 }
 
+/** Subscribe React surfaces to the tab store without missing mount-time updates. */
 export function useSidebarTab(): SidebarTab {
-  const [tab, setTab] = useState(getSidebarTab);
-  useEffect(() => subscribeSidebarChrome(() => { setTab(getSidebarTab()); }), []);
-  return tab;
+  return useSyncExternalStore(
+    subscribeSidebarChrome,
+    getSidebarTab,
+    getSidebarTab,
+  );
 }
 
 function encodedKnowledgeSelection(selection: KnowledgeSelection): string | null {

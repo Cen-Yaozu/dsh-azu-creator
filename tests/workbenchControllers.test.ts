@@ -11,6 +11,7 @@ import {
   sidebarItemElementId,
 } from "../src/client/workbench/sidebarLayoutBridge.ts";
 import { ReadonlyResource } from "../src/client/workbench/WorkbenchData.ts";
+import { MAIN_PANEL_ID, selectCreatorPanel } from "../src/client/workbench/mainPanel.ts";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -50,6 +51,27 @@ describe("ConversationWorkbenchController", () => {
     expect(errors).toEqual(["conversation seat unavailable"]);
     controller.sync("sessions");
     expect(errors.at(-1)).toBeNull();
+  });
+});
+
+describe("Desktop main panel navigation", () => {
+  it("selects the creator panel for feature tabs and clears it for sessions", () => {
+    const selectPanel = vi.fn();
+    const layout = { selectPanel };
+
+    selectCreatorPanel(layout, "content");
+    selectCreatorPanel(layout, "knowledge");
+    selectCreatorPanel(layout, "sessions");
+
+    expect(selectPanel.mock.calls).toEqual([
+      [MAIN_PANEL_ID],
+      [MAIN_PANEL_ID],
+      [null],
+    ]);
+  });
+
+  it("is a no-op on hosts that only expose the legacy conversation slot", () => {
+    expect(() => { selectCreatorPanel({}, "content"); }).not.toThrow();
   });
 });
 
