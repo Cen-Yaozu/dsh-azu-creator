@@ -1,3 +1,4 @@
+import type { ContentAccountFace } from "../contentAccountSchemas.ts";
 import type { VideoAccountFace } from "../videoAccountSchemas.ts";
 import type { PublishFlowFace } from "../publishFlowSchemas.ts";
 import type {
@@ -116,6 +117,7 @@ export interface CreatorViewFace {
 }
 
 export interface MuziViewFace {
+  localAccounts?: ContentAccountFace;
   accountManagement?: VideoAccountFace;
   ready: () => boolean;
   listProjects: (query?: string, includeArchived?: boolean, atlasLocator?: string) => Promise<MuziProjectListResult>;

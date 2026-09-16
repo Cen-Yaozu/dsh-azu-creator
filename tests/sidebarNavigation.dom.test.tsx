@@ -232,7 +232,7 @@ describe("Muzi Creator sidebar navigation", () => {
     const listProjects = vi.fn(async () => ({ items: [] }));
     const face = { listProjects } as unknown as ComponentProps<typeof MuziContentPanel>["face"];
     render(<MuziContentPanel face={face} resource={new ReadonlyResource(() => face.listProjects("", false))} />);
-    await screen.findByText("可通过会话创建内容，创建后会显示在这里。");
+    await screen.findByText("点击上方“新建内容”开始写作，创建后会显示在这里。");
     const header = document.querySelector(".muziSectionHeader")!;
     expect(header.textContent).toBe("创作项目搜索视图");
     expect(screen.queryByRole("button", { name: /新增|预览/ })).toBeNull();

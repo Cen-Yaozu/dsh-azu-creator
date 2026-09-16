@@ -42,6 +42,13 @@ function renderOverview(options: Partial<ComponentProps<typeof ContentOverview>>
 }
 
 describe("ContentOverview", () => {
+  it("includes manual account publications in the overview and ignores other projects", () => {
+    const project = contentOverviewProject();
+    const row = { projectId: project.id, accountId: "local-account", status: "published" as const, url: "https://example.com/local", publishedAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" };
+    render(<WorkbenchContentOverview result={{ items: [project] }} onSelect={vi.fn()} publications={[row, { ...row, accountId: "pending-account", status: "pending", url: "", publishedAt: null }, { ...row, projectId: "another-project" }]} />);
+    expect(screen.getByText("已发布记录").nextElementSibling?.textContent).toBe("3");
+    expect(screen.getByText("待发布账号").nextElementSibling?.textContent).toBe("1");
+  });
   it("opens account management from the content overview even with no projects", () => {
     const onManageAccounts = vi.fn();
     render(<div data-plugin="dsh-azu-creator"><WorkbenchContentOverview result={{ items: [] } as never} onSelect={vi.fn()} onManageAccounts={onManageAccounts} /></div>);

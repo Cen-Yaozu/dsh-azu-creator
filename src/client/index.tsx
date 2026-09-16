@@ -1,3 +1,4 @@
+import type { ContentAccountRequest, ContentAccountSnapshot } from "../contentAccountSchemas.ts";
 import { mountWorkbenchAppearance } from "./appearance/index.ts";
 import type { VideoAccountFace, VideoAccountManagement, AddVideoAccount, SetVideoAccountEnabled, VideoAccountLogin, VideoConnectionRequest, VideoConnectionReopen } from "../videoAccountSchemas.ts";
 import type { PublishFlow, PublishFlowPrepare, PublishFlowAction } from "../publishFlowSchemas.ts";
@@ -145,6 +146,7 @@ interface RemoteAnswer<T> {
 }
 
 interface MzCreatorRemote {
+  manageContentAccounts: (request: ContentAccountRequest) => Promise<RemoteAnswer<ContentAccountSnapshot>>;
   getVideoAccounts: (request: Record<string, never>) => Promise<RemoteAnswer<VideoAccountManagement>>;
   addVideoAccount: (request: AddVideoAccount) => Promise<RemoteAnswer<VideoAccountManagement>>;
   setVideoAccountEnabled: (request: SetVideoAccountEnabled) => Promise<RemoteAnswer<VideoAccountManagement>>;
@@ -543,6 +545,11 @@ export function apply(ctx: ClientContext): void {
 
   const contentFace = face();
   const muziFace: MuziViewFace = {
+    localAccounts: { manage: async (request) => {
+      const remote = remoteOf();
+      if (!remote || typeof remote.manageContentAccounts !== "function") throw new Error("内容管理服务尚未更新，请重启本地服务后重试。");
+      return unwrap(await remote.manageContentAccounts(request), "账号记录操作失败");
+    } },
     accountManagement,
     ready: () => remoteOf() !== undefined,
     listProjects: async (query, includeArchived, atlasLocator) => {

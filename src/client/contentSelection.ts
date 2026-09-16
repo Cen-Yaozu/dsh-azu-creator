@@ -144,8 +144,23 @@ export function getSidebarTab(): SidebarTab {
   return sidebarTab;
 }
 
+let contentNavigationGuard: (() => boolean) | null = null;
+
+/** Allow an active editor to protect an unsaved draft during sidebar navigation. */
+export function guardContentNavigation(guard: () => boolean): () => void {
+  contentNavigationGuard = guard;
+  return () => { if (contentNavigationGuard === guard) contentNavigationGuard = null; };
+}
+
+export function confirmContentNavigation(): boolean {
+  if (contentNavigationGuard && !contentNavigationGuard()) return false;
+  contentNavigationGuard = null;
+  return true;
+}
+
 export function setSidebarTab(tab: SidebarTab): void {
   if (sidebarTab === tab) return;
+  if (!confirmContentNavigation()) return;
   sidebarTab = tab;
   persist();
   emitChrome();
@@ -182,6 +197,7 @@ export function getKnowledgeSelection(): KnowledgeSelection {
 
 export function setContentSelection(id: string | null): void {
   if (selections.contentId === id) return;
+  if (!confirmContentNavigation()) return;
   selections = { ...selections, contentId: id };
   persist();
   emitSelection();

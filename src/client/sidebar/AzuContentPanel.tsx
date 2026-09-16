@@ -1,3 +1,4 @@
+import type { ContentPublication } from "../../contentAccountSchemas.ts";
 import { DeleteCardButton } from "../DeleteCardButton.tsx";
 import { useEffect, useState } from "react";
 import type { MuziViewFace } from "../face.ts";
@@ -25,6 +26,7 @@ function statusCount(project: Awaited<ReturnType<MuziViewFace["listProjects"]>>[
 }
 
 export function AzuContentPanel({ face, resource, t }: { t?: (key: string) => string; face: MuziViewFace; resource: ReadonlyResource<Awaited<ReturnType<MuziViewFace["listProjects"]>>> }) {
+  const [publications, setPublications] = useState<ContentPublication[]>([]);
   const [query, setQuery] = useState("");
   const [includeArchived, setIncludeArchived] = useState(false);
   const [items, setItems] = useState<Awaited<ReturnType<MuziViewFace["listProjects"]>>["items"]>([]);
@@ -41,6 +43,7 @@ export function AzuContentPanel({ face, resource, t }: { t?: (key: string) => st
         ? await resource.load(force)
         : await face.listProjects(query, includeArchived);
       setItems(result.items);
+      if (face.localAccounts) setPublications((await face.localAccounts.manage({ action: "get" })).publications);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "内容读取失败");
     } finally {
@@ -77,9 +80,10 @@ export function AzuContentPanel({ face, resource, t }: { t?: (key: string) => st
       <div className="muziPanelList">
         {loading && items.length === 0 && <div className="muziCardSkeletons" aria-label="正在读取内容">{[0, 1, 2].map((key) => <IslandSkeleton key={key} variant="rect" widthValue="100%" heightValue={88} />)}</div>}
         {error !== null && <IslandState kind="error" title="内容读取失败" message={error} />}
-        {!loading && error === null && items.length === 0 && <IslandState kind="empty" title="还没有创作项目" message="可通过会话创建内容，创建后会显示在这里。" />}
+        {!loading && error === null && items.length === 0 && <IslandState kind="empty" title="还没有创作项目" message="点击上方“新建内容”开始写作，创建后会显示在这里。" />}
         {items.map((item) => {
           const counts = statusCount(item);
+          const accountRows = publications.filter(row => row.projectId === item.id);
           const selected = selectedId === item.id;
           const toggleSelection = (): void => { setSelectedId(item.id); };
           return (
@@ -101,7 +105,8 @@ export function AzuContentPanel({ face, resource, t }: { t?: (key: string) => st
                 </span>
                 <span className="muziListSummary muziProgressSummary">
                   <span><strong>{counts.ready}</strong>/5 稿件</span>
-                  <span><strong>{counts.published}</strong>/5 发布</span>
+                  <span><strong>{counts.published}</strong>/5 平台记录</span>
+                  {face.localAccounts && <span><strong>{accountRows.filter(row => row.status === "published").length}</strong>/{accountRows.length} 账号已发布</span>}
                 </span>
               </span>
             </IslandSelectableCard>

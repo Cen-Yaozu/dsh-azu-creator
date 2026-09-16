@@ -1,5 +1,9 @@
+import { ContentAccountManager } from "../ContentAccounts.tsx";
+import { ContentProjectEditor } from "../ContentProjectEditor.tsx";
+import { CreateProjectDialog } from "../sidebar/CreateProjectDialog.tsx";
+import type { ContentPublication } from "../../contentAccountSchemas.ts";
 import { WorkbenchIcon } from "../ui/WorkbenchIcon.tsx";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { KnowledgePage, PendingKnowledgeFile } from "../../azuTypes.ts";
 import type { InspirationReference } from "../../inspirationTypes.ts";
@@ -13,6 +17,7 @@ import { KnowledgePreview } from "../KnowledgePreview.tsx";
 import { InspirationWorkbench, type InspirationCopyKey } from "../inspiration/index.ts";
 import { setInspirationSelection, useInspirationSelection } from "../inspirationSelection.ts";
 import {
+  confirmContentNavigation,
   bumpLibrary,
   setContentSelection,
   getContentSelection,
@@ -85,6 +90,13 @@ export function AzuWorkbenchRoot({
   startPendingProcessing,
   startKnowledgeDiscussion,
 }: AzuWorkbenchRootProps) {
+  const [creating, setCreating] = useState(false);
+  const [createTitle, setCreateTitle] = useState("");
+  const [createPrimary, setCreatePrimary] = useState<"mother" | "video">("mother");
+  const [createBusy, setCreateBusy] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [publications, setPublications] = useState<ContentPublication[]>([]);
+  const [publicationError, setPublicationError] = useState<string | null>(null);
   const sidebarTab = useSidebarTab();
   const feature: WorkbenchFeature = sidebarTab === "sessions" ? "hot" : sidebarTab;
   const selections = useFeatureSelections();
@@ -132,6 +144,13 @@ export function AzuWorkbenchRoot({
         : feature === "knowledge"
           ? selections.knowledge === null ? null : `${selections.knowledge.kind}:${selections.knowledge.kind === "page" ? selections.knowledge.locator : selections.knowledge.id}`
           : trellisSelection.projectId;
+  useEffect(() => {
+    if (feature !== "content" || detailKey !== null || !muziFace.localAccounts) return;
+    let stopped = false;
+    setPublicationError(null);
+    void muziFace.localAccounts.manage({ action: "get" }).then(value => { if (!stopped) setPublications(value.publications); }, cause => { if (!stopped) setPublicationError(cause instanceof Error ? cause.message : String(cause)); });
+    return () => { stopped = true; };
+  }, [feature, detailKey, muziFace, content.data]);
   const previousDetail = useRef({ feature, key: detailKey });
   useEffect(() => {
     if (detailKey !== null) rememberSidebarItemFocus(feature, detailKey);
@@ -174,6 +193,7 @@ export function AzuWorkbenchRoot({
   };
 
   const returnToOverview = (): void => {
+    if (!confirmContentNavigation()) return;
     if (detailKey !== null) restoreSidebarItemFocus(feature, detailKey);
     if (feature === "hot") selectDailyHotItem(null);
     if (feature === "inspiration") setInspirationSelection(null);
@@ -198,7 +218,7 @@ export function AzuWorkbenchRoot({
       );
     }
     if (feature === "content" && content.data !== null) {
-      return <ContentOverview result={content.data} onSelect={setContentSelection} onManageAccounts={() => { setContentSelection("content-accounts"); }} t={(key) => t(key as CreatorKey)} onDelete={async (project) => {
+      return <ContentOverview publications={publications} result={content.data} onSelect={setContentSelection} onManageAccounts={() => { setContentSelection("content-accounts"); }} t={(key) => t(key as CreatorKey)} onDelete={async (project) => {
         await muziFace.deleteProject(project.id, project.revision);
         if (getContentSelection() === project.id) setContentSelection(null);
         await resources.content.refreshAfterMutation();
@@ -212,13 +232,15 @@ export function AzuWorkbenchRoot({
       return <ProjectsOverview result={projects.data} onSelect={selectTrellisProject} />;
     }
     return null;
-  }, [muziFace, resources.content, content.data, feature, hot.data, inspirationFace, knowledge.data, openInspirationSession, projects.data, promoteInspiration, resources.inspiration, resources.knowledge, t]);
+  }, [publications, muziFace, resources.content, content.data, feature, hot.data, inspirationFace, knowledge.data, openInspirationSession, projects.data, promoteInspiration, resources.inspiration, resources.knowledge, t]);
 
   const detail = feature === "hot"
     ? hotItem === null ? null : <DailyHotInspector t={t} />
     : feature === "inspiration" ? null
     : feature === "content" && detailKey === "content-accounts"
-      ? mzFace.accountManagement === undefined ? <p role="status">账号管理暂不可用。</p> : <VideoAccountManager api={mzFace.accountManagement} t={(key) => t(key)} />
+      ? muziFace.localAccounts ? <ContentAccountManager api={muziFace.localAccounts} /> : mzFace.accountManagement === undefined ? <p role="status">账号管理暂不可用。</p> : <VideoAccountManager api={mzFace.accountManagement} t={(key) => t(key)} />
+      : feature === "content" && detailKey !== null && muziFace.localAccounts
+        ? <ContentProjectEditor key={detailKey} id={detailKey} face={muziFace} advanced={<AzuInspector t={t} muziFace={muziFace} mzFace={mzFace} startPendingProcessing={startPendingProcessing} startKnowledgeDiscussion={startKnowledgeDiscussion} />} onManageAccounts={() => { if (confirmContentNavigation()) setContentSelection("content-accounts"); }} />
       : feature === "content" || feature === "knowledge"
         ? detailKey === null ? null : <AzuInspector t={t} muziFace={muziFace} mzFace={mzFace} startPendingProcessing={startPendingProcessing} startKnowledgeDiscussion={startKnowledgeDiscussion} />
       : trellisSelection.projectId === null ? null : <TrellisProjectInspector face={trellisFace} t={t} />;
@@ -234,18 +256,28 @@ export function AzuWorkbenchRoot({
           <IslandTag size="small" color={snapshot.error === null ? "app-green" : "app-yellow"} variant="soft">{statusLabel}</IslandTag>
         </div>
         <div className="muziWorkbenchActions">
+          {feature === "content" && <IslandButton type="primary" size="small" onClick={() => { setCreateTitle(""); setCreateError(null); setCreating(true); }}>新建内容</IslandButton>}
           <IslandButton icon={<WorkbenchIcon name="sidebar-open" />} className="muziWorkbenchExpand" type="default" size="small" onClick={expandSidebarList}>展开列表</IslandButton>
           {detailKey !== null && <IslandButton icon={<WorkbenchIcon name="back" />} type="default" size="small" onClick={returnToOverview}>返回概览</IslandButton>}
           <IslandButton icon={<WorkbenchIcon name="refresh" />} type="default" size="small" loading={snapshot.refreshing} disabled={snapshot.refreshing} onClick={() => { void refresh().catch(() => undefined); }}>刷新</IslandButton>
         </div>
       </header>
       {snapshot.error !== null && snapshot.data !== null && <div className="muziWorkbenchRefreshError" role="status">刷新失败，继续显示上次数据：{snapshot.error}</div>}
+      {publicationError && feature === "content" && detailKey === null && <p role="alert">账号发布记录读取失败：{publicationError}</p>}
       <div className={`muziWorkbenchContent${detail !== null ? " detail" : " overview"}`}>
         {detail}
         {detail === null && overview}
         {detail === null && overview === null && snapshot.loading && <div className="muziWorkbenchLoading" aria-label="正在读取工作台数据"><IslandSkeleton variant="rect" widthValue="100%" heightValue={128} /><IslandSkeleton variant="rect" widthValue="100%" heightValue={220} /></div>}
         {detail === null && overview === null && !snapshot.loading && snapshot.error !== null && <IslandState kind="error" title="当前功能暂不可用" message={snapshot.error} action={<IslandButton icon={<WorkbenchIcon name="refresh" />} type="primary" onClick={() => { void refresh().catch(() => undefined); }}>重试</IslandButton>} />}
       </div>
+      {creating && <CreateProjectDialog title={createTitle} primary={createPrimary} submitting={createBusy} error={createError} onTitleChange={setCreateTitle} onPrimaryChange={setCreatePrimary} onCancel={() => setCreating(false)} onSubmit={() => {
+        if (createBusy || !confirmContentNavigation()) return;
+        setCreateBusy(true); setCreateError(null);
+        void muziFace.createProject(createTitle, createPrimary).then(async project => {
+          setCreating(false); setContentSelection(project.id); bumpLibrary();
+          await resources.content.refreshAfterMutation().catch(() => undefined);
+        }, cause => setCreateError(cause instanceof Error ? cause.message : String(cause))).finally(() => setCreateBusy(false));
+      }} />}
     </main>
   );
 }

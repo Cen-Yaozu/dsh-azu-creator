@@ -1,3 +1,5 @@
+import { ContentAccountsService } from "./contentAccounts.ts";
+import type { ContentAccountRequest } from "./contentAccountSchemas.ts";
 import { runVideoAccounts } from "./videoAccounts.ts";
 import { recordVideoAccountTrace } from "./videoAccountDiagnostics.ts";
 import { addVideoAccountSchema, setVideoAccountEnabledSchema, videoAccountLoginSchema, videoConnectionRequestSchema, videoConnectionReopenSchema, type VideoConnectionRequest, type VideoConnectionReopen, type AddVideoAccount, type SetVideoAccountEnabled, type VideoAccountLogin, type VideoAccountManagement } from "./videoAccountSchemas.ts";
@@ -242,6 +244,7 @@ export class MzCreatorService extends TypertRemoteService {
   previews = new Map<string, { url: string; port: number; pid: number }>();
   videos = new Map<string, { url: string; path: string; close: () => void }>();
   articles = new Map<string, { origin: string; root: string; close: () => void }>();
+  readonly contentAccounts: ContentAccountsService;
   readonly muzi: MuziCreatorService;
   readonly videoPublisher: VideoPublisherService;
   readonly publishFlow: PublishFlowService;
@@ -267,6 +270,7 @@ export class MzCreatorService extends TypertRemoteService {
     this.subtitleSkillDirConfig = config.subtitleSkillDir;
     this.coverSkillDirConfig = config.coverSkillDir;
     this.muzi = new MuziCreatorService(config);
+    this.contentAccounts = new ContentAccountsService(this.dataDir, id => this.muzi.getProject({ id }));
     this.videoPublisher = new VideoPublisherService(config, this.dataDir, this.muzi);
     this.videoConnectionTimeoutMs = config.videoConnectionTimeoutMs ?? 600_000;
     this.videoConnectionPollIntervalMs = config.videoConnectionPollIntervalMs ?? 2000;
@@ -293,6 +297,10 @@ export class MzCreatorService extends TypertRemoteService {
       this.inspiration.dispose();
       await this.stopServers();
     }, "mz-creator: library watch");
+  }
+
+  async manageContentAccounts(request: ContentAccountRequest, signal: AbortSignal) {
+    return this.contentAccounts.manage(request, signal);
   }
 
   async listMuziProjects(request: MuziProjectListRequest, signal: AbortSignal): Promise<MuziProjectListResult> {

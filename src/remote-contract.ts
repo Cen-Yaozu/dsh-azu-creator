@@ -1,3 +1,4 @@
+import { contentAccountRequestSchema, contentAccountSnapshotSchema } from "./contentAccountSchemas.ts";
 import type { InvocationDescriptor } from "@deepseek-ai/dsh-typert-protocol";
 import { z } from "zod";
 import { githubRequestSchema, githubResultSchema } from "./trellisGithubSchemas.ts";
@@ -161,6 +162,7 @@ export const AZU_CREATOR_INVOCATIONS: readonly InvocationDescriptor[] = [
   invocation("getVideoPlayback", idRequestSchema, videoPlaybackResultSchema),
   invocation("getArticleMedia", idRequestSchema, articleMediaResultSchema),
   invocation("getSubtitleText", idRequestSchema, subtitleTextResultSchema),
+  invocation("manageContentAccounts", contentAccountRequestSchema, contentAccountSnapshotSchema),
   invocation("getVideoAccounts", emptyObjectSchema, videoAccountManagementSchema),
   invocation("addVideoAccount", addVideoAccountSchema, videoAccountManagementSchema),
   invocation("setVideoAccountEnabled", setVideoAccountEnabledSchema, videoAccountManagementSchema),

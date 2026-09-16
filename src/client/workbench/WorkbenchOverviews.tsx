@@ -1,3 +1,4 @@
+import type { ContentPublication } from "../../contentAccountSchemas.ts";
 import type { ReactNode } from "react";
 import { DeleteCardButton } from "../DeleteCardButton.tsx";
 import type { DailyHotItem, DailyHotResult } from "../../dailyHotTypes.ts";
@@ -103,8 +104,9 @@ export function HotOverview({ result, onSelect }: {
 }
 
 /** Read-only creation-project summary with real document and publication counts. */
-export function ContentOverview({ result, onSelect, onDelete, onManageAccounts, t }: {
+export function ContentOverview({ result, onSelect, onDelete, onManageAccounts, t, publications = [] }: {
   result: MuziProjectListResult;
+  publications?: ContentPublication[];
   onDelete?: (project: MuziProjectSummary) => Promise<void>;
   onManageAccounts?: () => void;
   t?: (key: string) => string;
@@ -117,6 +119,7 @@ export function ContentOverview({ result, onSelect, onDelete, onManageAccounts, 
     const counts = contentReadiness(item);
     return { ready: summary.ready + counts.ready, published: summary.published + counts.published };
   }, { ready: 0, published: 0 });
+  const manual = publications.filter(row => result.items.some(project => project.id === row.projectId));
   const latest = [...result.items].sort((left, right) => dateOrder(right.updatedAt) - dateOrder(left.updatedAt));
 
   return <section className="workbenchOverview" aria-labelledby="content-overview-title">
@@ -124,7 +127,8 @@ export function ContentOverview({ result, onSelect, onDelete, onManageAccounts, 
     <dl className="workbenchOverviewMetrics">
       <Metric label="内容项目" value={result.items.length} />
       <Metric label="稿件已就绪" value={totals.ready} />
-      <Metric label="已发布记录" value={totals.published} />
+      <Metric label="已发布记录" value={totals.published + manual.filter(row => row.status === "published").length} />
+      <Metric label="待发布账号" value={manual.filter(row => row.status === "pending").length} />
       <Metric label="最近更新" value={latest[0] === undefined ? "不可用" : displayDate(latest[0].updatedAt)} />
     </dl>
     <div className="workbenchOverviewBreakdown" aria-label="项目阶段分布">
@@ -141,7 +145,7 @@ export function ContentOverview({ result, onSelect, onDelete, onManageAccounts, 
           </span>
           <span className="workbenchOverviewCardMeta">
             <span>更新于 {displayDate(project.updatedAt)}</span>
-            <span>{counts.ready} 稿就绪 · {counts.published} 项已发布</span>
+            <span>{counts.ready} 稿就绪 · {counts.published + manual.filter(row => row.projectId === project.id && row.status === "published").length} 项已发布</span>
           </span>
         </IslandSelectableCard>
         {onDelete !== undefined && <DeleteCardButton title={project.title} t={t} onDelete={() => onDelete(project)} />}

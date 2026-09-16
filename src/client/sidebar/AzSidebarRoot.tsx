@@ -11,6 +11,7 @@ import type { CreatorKey } from "../locales.ts";
 import type { SidebarTab } from "../persistence.ts";
 import { InspirationSidebarPanel, type InspirationCopyKey } from "../inspiration/index.ts";
 import {
+  confirmContentNavigation,
   setSidebarChromeWidth,
   setSidebarTab,
   setContentSelection,
@@ -107,7 +108,7 @@ export function AzSidebarRoot({
   const [sessionPending, setSessionPending] = useState(false);
   const [sessionError, setSessionError] = useState<string | null>(null);
   const beginSession = async (): Promise<void> => {
-    if (startingSession.current) return;
+    if (startingSession.current || !confirmContentNavigation()) return;
     startingSession.current = true;
     setSessionPending(true);
     setSessionError(null);
@@ -141,6 +142,7 @@ export function AzSidebarRoot({
   useEffect(() => bindSidebarLayout({ collapsed, toggle: toggleSidebar }), [collapsed, toggleSidebar]);
 
   const chooseTab = (tab: typeof sidebarTab): void => {
+    if (!confirmContentNavigation()) return;
     // Community panels own their controller state; their active entry closes them.
     column.current?.querySelectorAll<HTMLButtonElement>(
       "[data-dsh-ssh-entry][data-active], [data-dsh-taskboard-entry][data-active]",
