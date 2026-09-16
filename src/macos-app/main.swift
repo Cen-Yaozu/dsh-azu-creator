@@ -2,7 +2,7 @@ import Cocoa
 import WebKit
 
 class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate {
-    var window: NSWindow!
+    private var window: NSWindow?
     var webView: WKWebView!
     var retryTimer: Timer?
     let targetURL = URL(string: "http://127.0.0.1:51873/")!
@@ -18,10 +18,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDe
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag {
-            window.makeKeyAndOrderFront(nil)
+        guard let window else { return true }
+        if window.isMiniaturized {
+            window.deminiaturize(nil)
         }
-        return true
+        window.makeKeyAndOrderFront(nil)
+        return false // The retained main window handles reopening.
     }
 
     // MARK: - Setup Window & WebView
@@ -36,12 +38,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDe
             height: initialHeight
         )
 
-        window = NSWindow(
+        let window = NSWindow(
             contentRect: initialRect,
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
         )
+        // Keep the window and its web view alive after closing so reopening can reuse them.
+        window.isReleasedWhenClosed = false
+        self.window = window
         window.title = "Azu Creator"
         window.minSize = NSSize(width: 960, height: 640)
         window.titlebarAppearsTransparent = false
