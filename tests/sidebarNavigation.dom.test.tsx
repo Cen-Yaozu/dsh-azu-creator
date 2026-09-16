@@ -1,10 +1,11 @@
 /** @vitest-environment jsdom */
 import type { ComponentProps } from "react";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useLayoutEffect } from "react";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getContentSelection, getKnowledgeSelection, getSidebarTab, setContentSelection, setKnowledgeSelection, getSelectedContentId, setSelectedContentId, setSidebarTab } from "../src/client/contentSelection.ts";
+import { getContentSelection, getKnowledgeSelection, getSidebarTab, setContentSelection, setKnowledgeSelection, getSelectedContentId, setSelectedContentId, setSidebarTab, useSidebarTab } from "../src/client/contentSelection.ts";
 import { getSelectedDailyHotId, selectDailyHotItem } from "../src/client/dailyHotSelection.ts";
 import { CREATOR_STORAGE_KEY, loadCreatorUiState } from "../src/client/persistence.ts";
 import { getInspirationSelection, setInspirationSelection } from "../src/client/inspirationSelection.ts";
@@ -92,6 +93,7 @@ describe("Muzi Creator sidebar navigation", () => {
     render(<MzSidebarRoot {...props} />);
     await user.click(screen.getByRole("button", { name: "session.new.label" }));
     expect(props.startSession).toHaveBeenCalledOnce();
+    expect(props.startSession).toHaveBeenCalledWith();
     expect(getSidebarTab()).toBe("sessions");
   });
 
@@ -320,6 +322,30 @@ describe("Muzi Creator sidebar navigation", () => {
         expect(other.tabIndex).toBe(-1);
       }
     }
+  });
+
+  it("notifies the host main-panel navigator when a tab is activated", async () => {
+    const user = userEvent.setup();
+    const onTabChange = vi.fn();
+    render(<MzSidebarRoot {...sidebarProps()} onTabChange={onTabChange} />);
+
+    await user.click(screen.getByRole("tab", { name: "内容" }));
+    await user.click(screen.getByRole("tab", { name: "会话" }));
+
+    expect(onTabChange.mock.calls).toEqual([["content"], ["sessions"]]);
+  });
+
+  it("updates the central navigation subscriber when the tab changes during slot mount", async () => {
+    function CentralNavigationProbe() {
+      const sidebarTab = useSidebarTab();
+      useLayoutEffect(() => { setSidebarTab("content"); }, []);
+      return <main data-surface="central-workbench" data-feature={sidebarTab === "sessions" ? "hot" : sidebarTab} />;
+    }
+
+    render(<CentralNavigationProbe />);
+    await waitFor(() => {
+      expect(document.querySelector('[data-surface="central-workbench"]')?.getAttribute("data-feature")).toBe("content");
+    });
   });
 
   it("preserves the host-provided 360px expanded width and settles into the collapsed rail", async () => {

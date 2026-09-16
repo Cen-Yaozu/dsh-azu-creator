@@ -1,6 +1,5 @@
 import { WorkbenchIcon } from "../ui/WorkbenchIcon.tsx";
 import { useEffect, useMemo, useRef } from "react";
-import type { PropsRuntime } from "@deepseek-ai/dsh-client-ui-slots";
 
 import type { KnowledgePage, PendingKnowledgeFile } from "../../azuTypes.ts";
 import type { InspirationReference } from "../../inspirationTypes.ts";
@@ -58,7 +57,7 @@ const TAB_TITLES = {
 
 type WorkbenchFeature = keyof typeof TAB_TITLES;
 
-export type AzuWorkbenchRootProps = PropsRuntime<"conversation"> & {
+export type AzuWorkbenchRootProps = {
   resources: WorkbenchResources;
   inspirationFace: InspirationViewFace;
   muziFace: MuziViewFace;
@@ -252,4 +251,3 @@ export function AzuWorkbenchRoot({
 }
 
 export const MuziWorkbenchRoot = AzuWorkbenchRoot;
-

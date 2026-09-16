@@ -124,11 +124,17 @@ import { bumpTrellis } from "./trellisSelection.ts";
 import { createWorkbenchResources } from "./workbench/WorkbenchData.ts";
 import { AzuWorkbenchRoot, MuziWorkbenchRoot } from "./workbench/AzuWorkbenchRoot.tsx";
 import { ConversationWorkbenchController } from "./workbench/conversationSlot.ts";
+import { MAIN_PANEL_ID, selectCreatorPanel, type MainPanelLayout } from "./workbench/mainPanel.ts";
+import { ordinarySessionCreateOptions } from "./sessionCreation.ts";
 
 declare module "@deepseek-ai/dsh-client-ui-slots" {
   interface LocaleNamespaceMap {
     "dsh.azu.creator": CreatorKey | InspirationCopyKey;
     "dsh.mz.creator": CreatorKey | InspirationCopyKey;
+  }
+  interface SlotMap {
+    /** Desktop 2.x root-scoped central panel registry. */
+    main: { kind: "keyed"; scope: "root" };
   }
 }
 
@@ -259,7 +265,7 @@ interface FreshSessionsClient {
       }>;
     };
   };
-  create: (options: { workspaceId: WorkspaceId }) => Promise<SessionId>;
+  create: (options?: { workspaceId?: WorkspaceId; cwd?: string }) => Promise<SessionId>;
   scope: (id: SessionId) => ClientContext | undefined;
   open: (id: SessionId) => void;
 }
@@ -833,7 +839,7 @@ export function apply(ctx: ClientContext): void {
   };
   const workbenchResources = createWorkbenchResources(dailyHotFace, inspirationFace, muziFace, trellisFace);
 
-  const handoffWorkspace = (): WorkspaceId => {
+  const handoffWorkspace = (): WorkspaceId | undefined => {
     const workspaces = ctx.workspaces.list.getSnapshot();
     const sessions = (ctx.get("sessions") as unknown as FreshSessionsClient).list.getSnapshot();
     const current = sessions.current === undefined ? undefined : sessions.byId[sessions.current];
@@ -841,6 +847,11 @@ export function apply(ctx: ClientContext): void {
       ? undefined
       : workspaces.items.find((workspace) => workspace.path === current.cwd && workspace.sessionIds.includes(current.id));
     const workspaceId = currentWorkspace?.workspaceId ?? workspaces.recentWorkspaceId ?? workspaces.items[0]?.workspaceId;
+    return workspaceId;
+  };
+
+  const requireHandoffWorkspace = (): WorkspaceId => {
+    const workspaceId = handoffWorkspace();
     if (workspaceId === undefined) throw new Error("请先创建或打开一个工作区，再开始 Agent 会话");
     return workspaceId;
   };
@@ -859,7 +870,7 @@ export function apply(ctx: ClientContext): void {
   }): Promise<void> => {
     const sessions = ctx.get("sessions") as unknown as FreshSessionsClient;
     await stageSessionHandoff({
-      create: () => sessions.create({ workspaceId: handoffWorkspace() }),
+      create: () => sessions.create({ workspaceId: requireHandoffWorkspace() }),
       inputFor: (sessionId) => {
         const scope = sessions.scope(sessionId);
         if (scope === undefined) throw new Error("新会话尚未就绪，请重试");
@@ -876,6 +887,35 @@ export function apply(ctx: ClientContext): void {
       },
     }, options);
   };
+
+  const injectWorkbench = () => ({
+    resources: workbenchResources,
+    inspirationFace,
+    muziFace,
+    mzFace: contentFace,
+    trellisFace,
+    t: ctx.locale.bind(NS),
+    openInspirationSession: (sessionId: string) => {
+      revealHandoff(sessionId as SessionId);
+    },
+    promoteInspiration: async (reference: InspirationReference) => createHandoff({
+      prompt: "请基于所引用的灵感研究报告提出 3 个清晰且彼此不同的内容方向，分别说明目标读者、核心观点和适合的内容形态。本次只生成提案，不创建内容、不写入 Atlas，也不发布。",
+      label: reference.label,
+      ref: reference.ref,
+      autoSubmit: true,
+    }),
+    startPendingProcessing: (file: PendingKnowledgeFile) => createHandoff({
+      prompt: "/llm-wiki 请消化所引用的待处理文件。先执行隐私自查与缓存检查；确认可处理后，按 llm-wiki 标准写入正式知识并更新索引。完成后报告新增或更新的正式知识定位符。",
+      label: "待消化文件",
+      ref: `pending:${file.id}:${file.sha256}`,
+      requireLlmWiki: true,
+    }),
+    startKnowledgeDiscussion: (page: KnowledgePage) => createHandoff({
+      prompt: "请基于所引用的正式知识，先讨论核心观点、证据边界与可行的创作方向。除非我明确输入“总结成为母内容”或“整理为脚本”，否则不要写入 Creator Studio。",
+      label: page.title,
+      ref: `knowledge:${page.locator}`,
+    }),
+  });
 
   ctx.effect(() => {
     const triggers = ctx.get("inputTriggers") as
@@ -909,9 +949,11 @@ export function apply(ctx: ClientContext): void {
   }, "dsh-azu-creator: content triggers");
 
   const injectSidebar = (): MzSidebarInjected => ({
+    // Ordinary navigation only uses an explicitly selected workspace. Content
+    // handoffs keep their separate workspace requirement below.
     startSession: async (workspaceId?: WorkspaceId) => {
       const sessions = ctx.get("sessions") as unknown as FreshSessionsClient;
-      const sessionId = await sessions.create({ workspaceId: workspaceId ?? handoffWorkspace() });
+      const sessionId = await sessions.create(ordinarySessionCreateOptions(workspaceId));
       sessions.open(sessionId);
     },
     toggleSidebar: () => {
@@ -940,6 +982,14 @@ export function apply(ctx: ClientContext): void {
         contentT={contentT}
         sessionList={(ctx.get("sessions") as unknown as FreshSessionsClient).list}
         resources={workbenchResources}
+        onTabChange={(tab) => {
+          try {
+            selectCreatorPanel(ctx.layout as unknown as MainPanelLayout, tab);
+            setWorkbenchSlotError(null);
+          } catch (cause) {
+            setWorkbenchSlotError(cause instanceof Error ? cause.message : String(cause));
+          }
+        }}
       />
     );
   }
@@ -973,40 +1023,29 @@ export function apply(ctx: ClientContext): void {
     bumpProfile();
     bumpTrellis();
 
+    const stopMainWorkbench = ctx.slots.inject("main" as never, () => {
+      const dispose = ctx.slots.register({
+        name: "main",
+        key: MAIN_PANEL_ID,
+        locale: NS,
+        inject: injectWorkbench,
+      }, MuziWorkbenchRoot);
+      try {
+        selectCreatorPanel(ctx.layout as unknown as MainPanelLayout, getSidebarTab());
+        setWorkbenchSlotError(null);
+      } catch (cause) {
+        setWorkbenchSlotError(cause instanceof Error ? cause.message : String(cause));
+      }
+      return dispose;
+    });
+
     const stopWorkbench = ctx.slots.inject("conversation", () => {
       const controller = new ConversationWorkbenchController(
         () => ctx.slots.register({
           name: "conversation",
           priority: -10,
           locale: NS,
-          inject: () => ({
-            resources: workbenchResources,
-            inspirationFace,
-            muziFace,
-            mzFace: contentFace,
-            trellisFace,
-            t: ctx.locale.bind(NS),
-            openInspirationSession: (sessionId: string) => {
-              revealHandoff(sessionId as SessionId);
-            },
-            promoteInspiration: async (reference: InspirationReference) => createHandoff({
-              prompt: "请基于所引用的灵感研究报告提出 3 个清晰且彼此不同的内容方向，分别说明目标读者、核心观点和适合的内容形态。本次只生成提案，不创建内容、不写入 Atlas，也不发布。",
-              label: reference.label,
-              ref: reference.ref,
-              autoSubmit: true,
-            }),
-            startPendingProcessing: (file: PendingKnowledgeFile) => createHandoff({
-              prompt: "/llm-wiki 请消化所引用的待处理文件。先执行隐私自查与缓存检查；确认可处理后，按 llm-wiki 标准写入正式知识并更新索引。完成后报告新增或更新的正式知识定位符。",
-              label: "待消化文件",
-              ref: `pending:${file.id}:${file.sha256}`,
-              requireLlmWiki: true,
-            }),
-            startKnowledgeDiscussion: (page: KnowledgePage) => createHandoff({
-              prompt: "请基于所引用的正式知识，先讨论核心观点、证据边界与可行的创作方向。除非我明确输入“总结成为母内容”或“整理为脚本”，否则不要写入 Creator Studio。",
-              label: page.title,
-              ref: `knowledge:${page.locator}`,
-            }),
-          }),
+          inject: injectWorkbench,
         }, MuziWorkbenchRoot),
         setWorkbenchSlotError,
       );
@@ -1056,6 +1095,7 @@ export function apply(ctx: ClientContext): void {
       stopMuziLive();
       stopTrellisLive();
       stopInspirationLive();
+      stopMainWorkbench();
       stopWorkbench();
       stopSettings();
       stopSettingsTrigger();

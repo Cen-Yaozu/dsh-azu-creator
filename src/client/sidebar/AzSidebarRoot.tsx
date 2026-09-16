@@ -8,6 +8,7 @@ import {
 
 import type { CreatorViewFace, InspirationViewFace, DailyHotViewFace, MuziViewFace, TrellisViewFace } from "../face.ts";
 import type { CreatorKey } from "../locales.ts";
+import type { SidebarTab } from "../persistence.ts";
 import { InspirationSidebarPanel, type InspirationCopyKey } from "../inspiration/index.ts";
 import {
   setSidebarChromeWidth,
@@ -57,6 +58,7 @@ export type AzSidebarRootProps =
       getSnapshot: () => SessionActivitySnapshot;
       subscribe: (listener: () => void) => () => void;
     };
+    onTabChange?: (tab: SidebarTab) => void;
   };
 
 export type MzSidebarRootProps = AzSidebarRootProps;
@@ -77,6 +79,7 @@ export function AzSidebarRoot({
   contentT,
   resources,
   sessionList,
+  onTabChange,
 }: MzSidebarRootProps) {
   const [settled, setSettled] = useState(collapsed);
   useEffect(() => {
@@ -148,6 +151,7 @@ export function AzSidebarRoot({
     if (tab === "knowledge") setKnowledgeSelection(null);
     if (tab === "projects") selectTrellisProject(null);
     setSidebarTab(tab);
+    onTabChange?.(tab);
   };
 
   const moveSidebarTab = (event: KeyboardEvent<HTMLButtonElement>, current: typeof sidebarTab): void => {
@@ -457,4 +461,3 @@ export function AzSidebarRoot({
 }
 
 export const MzSidebarRoot = AzSidebarRoot;
-

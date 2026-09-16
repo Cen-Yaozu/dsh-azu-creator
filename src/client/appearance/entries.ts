@@ -20,7 +20,7 @@ export function mountCommunityEntryAppearance(doc: Document): () => void {
   };
   const sync = () => {
     const present = new Set<HTMLElement>();
-    for (const entry of doc.querySelectorAll<HTMLElement>(`${ROOT} ${ENTRY}`)) {
+    for (const entry of doc.querySelectorAll<HTMLElement>(`:is(${ROOT}) ${ENTRY}`)) {
       const [icon, label] = entry.children;
       const name = entry.getAttribute('aria-label')?.trim();
       if (!name || entry.children.length !== 2 || icon?.tagName !== 'SPAN'
