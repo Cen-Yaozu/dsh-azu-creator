@@ -23,6 +23,8 @@ describe("content management loop", () => {
     });
     render(<ContentAccountManager api={{ manage }} />);
     await screen.findByText(/还没有账号/);
+    fireEvent.click(screen.getByRole("button", { name: "新增账号" }));
+    fireEvent.change(screen.getByLabelText("所属平台"), { target: { value: "xiaohongshu" } });
     fireEvent.change(screen.getByLabelText("账号名称"), { target: { value: "品牌号" } });
     fireEvent.change(screen.getByLabelText("主页链接（选填）"), { target: { value: "https://example.com/brand" } });
     fireEvent.submit(screen.getByRole("form", { name: "新增账号" }));
@@ -33,6 +35,56 @@ describe("content management loop", () => {
     fireEvent.submit(screen.getByRole("form", { name: "编辑账号" }));
     await screen.findByText(/小红书 · 已停用/);
     expect(manage.mock.calls.every(([request]) => ["get", "saveAccount"].includes(request.action))).toBe(true);
+  });
+
+  it("protects unsaved form input and restores focus after explicit discard", async () => {
+    render(<ContentAccountManager api={{ manage: async () => snapshot() }} />);
+    await screen.findByText("还没有账号");
+    const add = screen.getByRole("button", { name: "新增账号" });
+    add.focus(); fireEvent.click(add);
+    fireEvent.change(screen.getByLabelText("所属平台"), { target: { value: "xiaohongshu" } });
+    fireEvent.change(screen.getByLabelText("账号名称"), { target: { value: "未保存的账号" } });
+    fireEvent.click(screen.getByRole("button", { name: "取消" }));
+    expect(screen.getByRole("alert").textContent).toContain("未保存");
+    fireEvent.click(screen.getByRole("button", { name: "继续编辑" }));
+    expect((screen.getByLabelText("账号名称") as HTMLInputElement).value).toBe("未保存的账号");
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }));
+    fireEvent.click(screen.getByRole("button", { name: "放弃修改" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(add);
+  });
+
+  it("filters accounts without unmounting their connection sessions", async () => {
+    const state = snapshot(); state.accounts = [account];
+    render(<ContentAccountManager api={{ manage: async () => state }} />);
+    await screen.findByRole("article", { name: "品牌号" });
+    fireEvent.change(screen.getByLabelText("筛选平台"), { target: { value: "bilibili" } });
+    expect(screen.queryByRole("article", { name: "品牌号" })).toBeNull();
+    expect(screen.getByText("品牌号").closest("article")?.hidden).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "清除筛选" }));
+    expect(screen.getByRole("article", { name: "品牌号" })).toBeTruthy();
+  });
+
+  it("adds Bilibili directly by QR without requesting account fields or saving a placeholder", async () => {
+    const state = snapshot();
+    const manage = vi.fn<ContentAccountFace["manage"]>(async () => structuredClone(state));
+    const connected = { runtime: { available: true, version: "1.2.4" as const, message: "ready" }, connection: {
+      accountId: "new-bili", state: "connected" as const, identity: { mid: "123", name: "平台昵称" }, checkedAt: new Date().toISOString(), message: "已核验", qrDataUrl: null, expiresAt: null,
+    } };
+    const connectBilibili = vi.fn<NonNullable<ContentAccountFace["connectBilibili"]>>(async request => {
+      if (request.action === "status") state.accounts = [{ ...account, id: "new-bili", platform: "bilibili", name: "平台昵称" }];
+      return connected;
+    });
+    render(<ContentAccountManager api={{ manage, connectBilibili }} />);
+    await screen.findByText("还没有账号");
+    fireEvent.click(screen.getByRole("button", { name: "新增账号" }));
+    expect(screen.queryByLabelText("账号名称")).toBeNull();
+    expect(screen.queryByLabelText(/密码/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "扫码登录" }));
+    await screen.findByText("已添加B站账号：平台昵称");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(connectBilibili).toHaveBeenCalledWith(expect.objectContaining({ action: "begin" }));
+    expect(manage.mock.calls.every(([request]) => request.action === "get")).toBe(true);
   });
 
   it("selects a target and records a manual result with URL and time", async () => {
@@ -59,6 +111,8 @@ describe("content management loop", () => {
     const manage = vi.fn<ContentAccountFace["manage"]>(async request => { if (request.action !== "get") throw new Error("记录已更新，请重新读取"); return snapshot(); });
     render(<ContentAccountManager api={{ manage }} />);
     await screen.findByText(/还没有账号/);
+    fireEvent.click(screen.getByRole("button", { name: "新增账号" }));
+    fireEvent.change(screen.getByLabelText("所属平台"), { target: { value: "xiaohongshu" } });
     fireEvent.change(screen.getByLabelText("账号名称"), { target: { value: "保留我的输入" } });
     fireEvent.submit(screen.getByRole("form", { name: "新增账号" }));
     expect((await screen.findByRole("alert")).textContent).toContain("重新读取");

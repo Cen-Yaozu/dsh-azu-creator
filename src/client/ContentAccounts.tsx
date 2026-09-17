@@ -1,10 +1,11 @@
+import type { BilibiliConnectionResult } from "../bilibiliConnectionSchemas.ts";
 import { BilibiliConnection } from "./BilibiliConnection.tsx";
 import { useEffect, useRef, useState } from "react";
 import {
   CONTENT_PLATFORMS, type ContentAccount, type ContentAccountFace, type ContentAccountRequest,
   type ContentAccountSnapshot, type ContentPublication,
 } from "../contentAccountSchemas.ts";
-import { IslandButton, IslandTag } from "./ui/IslandControls.tsx";
+import { IslandButton, IslandModal, IslandTag } from "./ui/IslandControls.tsx";
 import { bumpLibrary } from "./contentSelection.ts";
 import "./ContentManagement.css";
 
@@ -33,46 +34,116 @@ export function useContentAccounts(api: ContentAccountFace) {
   };
   return { data, error, busy, run };
 }
-const blank = () => ({ name: "", platform: "xiaohongshu" as ContentAccount["platform"], homepage: "", notes: "", enabled: true });
+const blank = () => ({ name: "", platform: "bilibili" as ContentAccount["platform"], homepage: "", notes: "", enabled: true });
 
 export function ContentAccountManager({ api }: { api: ContentAccountFace }) {
   const { data, error, busy, run } = useContentAccounts(api);
   const [editing, setEditing] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [newConnection, setNewConnection] = useState<BilibiliConnectionResult | null>(null);
+  const [connectingNew, setConnectingNew] = useState(false);
+  const newOperation = useRef(false);
+  const newRequestId = useRef<string | null>(null);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   const [form, setForm] = useState(blank);
+  const original = useRef(blank());
+  const [discarding, setDiscarding] = useState(false);
+  const discardPrompt = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (discarding) discardPrompt.current?.focus(); }, [discarding]);
   const [message, setMessage] = useState("");
-  const reset = () => { setEditing(null); setForm(blank()); };
-  return <section className="contentManager" aria-label="本地账号管理">
-    <header className="contentManagerHeader"><div><h2>账号管理</h2><p>登记内容投放账号，管理各账号的发布记录。B站支持扫码连接与身份检查；自动发布尚未接入。</p></div><IslandButton disabled={busy} onClick={() => { void run({ action: "get" }); }}>重新读取</IslandButton></header>
-    {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+  const [query, setQuery] = useState("");
+  const [platform, setPlatform] = useState("all");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const openForm = (account?: ContentAccount) => {
+    const next = account ? { name: account.name, platform: account.platform, homepage: account.homepage, notes: account.notes, enabled: account.enabled } : blank();
+    original.current = next;
+    newRequestId.current = null;
+    setNewConnection(null); setConnectionError(null);
+    setEditing(account?.id ?? null); setForm(next); setDiscarding(false); setMessage(""); setFormOpen(true);
+  };
+  const closeForm = () => {
+    if (busy || newOperation.current) return;
+    if (newConnection && api.connectBilibili) {
+      newOperation.current = true; setConnectingNew(true);
+      void api.connectBilibili({ action: "cancel", accountId: newConnection.connection.accountId }).then(() => {
+        setNewConnection(null); setFormOpen(false); void run({ action: "get" });
+      }, cause => setConnectionError(cause instanceof Error ? cause.message : "暂时无法取消连接，请重试。")).finally(() => { newOperation.current = false; setConnectingNew(false); });
+      return;
+    }
+    if (!editing && form.platform === "bilibili" && !form.name && !form.notes && !form.homepage) { setFormOpen(false); return; }
+    if (JSON.stringify(form) !== JSON.stringify(original.current)) setDiscarding(true);
+    else setFormOpen(false);
+  };
+  const beginConnection = async () => {
+    if (!api.connectBilibili || newOperation.current) return;
+    newOperation.current = true; setConnectingNew(true); setConnectionError(null);
+    try { setNewConnection(await api.connectBilibili({ action: "begin", requestId: newRequestId.current ??= crypto.randomUUID() })); }
+    catch (cause) { setConnectionError(cause instanceof Error ? cause.message : "暂时无法获取二维码，请重试。"); }
+    finally { newOperation.current = false; setConnectingNew(false); }
+  };
+  const scanFirst = !editing && form.platform === "bilibili";
+  const accounts = data?.accounts ?? [];
+  const matching = accounts.filter(account => (platform === "all" || account.platform === platform)
+    && `${account.name} ${CONTENT_PLATFORMS[account.platform]} ${account.notes}`.toLowerCase().includes(query.trim().toLowerCase()));
+  return <section className="contentManager contentAccountManager" aria-label="本地账号管理">
+    <header className="contentManagerHeader">
+      <div><h2>账号管理</h2><p className="contentMuted">管理投放账号与平台连接，发布记录保留在对应内容中。</p></div>
+      <div className="contentActions">
+        <IslandButton size="small" disabled={busy} onClick={() => { void run({ action: "get" }).then(ok => { if (ok) { setRefreshKey(key => key + 1); setMessage("账号列表已刷新"); } }); }}>{busy && !formOpen ? "刷新中…" : "刷新状态"}</IslandButton>
+        <IslandButton type="primary" size="small" disabled={busy || !data} onClick={() => openForm()}>新增账号</IslandButton>
+      </div>
+    </header>
+    <p className="contentAccountNotice">B站支持扫码登录与身份检查。视频号等平台暂支持账号登记，自动发布尚未接入。</p>
+    {error && !formOpen && <p role="alert">{error}</p>}{message && <p role="status" className="contentAccountFeedback">{message}</p>}
     {data === null && !error && <p role="status">正在读取账号…</p>}
-    <div className="contentAccountLayout">
-      <section aria-label="已登记账号"><h3>已登记账号 · {data?.accounts.length ?? 0}</h3>
-        {data?.accounts.length === 0 && <p className="contentMuted">还没有账号，从右侧登记第一个账号。</p>}
-        {data?.accounts.map(account => <article className="contentAccountRow" key={account.id}>
-          <div><strong>{account.name}</strong><p>{CONTENT_PLATFORMS[account.platform]} · {account.enabled ? "已启用" : "已停用"}</p>
-            {account.platform === "bilibili" && api.connectBilibili
-              ? <BilibiliConnection account={account} connect={api.connectBilibili} />
-              : <IslandTag size="small" color="brown" variant="soft">已登记 · 未连接平台</IslandTag>}
-            {account.homepage && <p><a href={account.homepage} target="_blank" rel="noreferrer">查看主页</a></p>}
-            {account.notes && <p className="contentMuted">{account.notes}</p>}
-          </div>
-          <IslandButton size="small" disabled={busy} onClick={() => { setEditing(account.id); setForm({ name: account.name, platform: account.platform, homepage: account.homepage, notes: account.notes, enabled: account.enabled }); setMessage(""); }}>编辑账号</IslandButton>
-        </article>)}
-      </section>
-      <form className="contentForm" aria-label={editing ? "编辑账号" : "新增账号"} onSubmit={event => {
-        event.preventDefault(); if (!data) return;
-        void run({ action: "saveAccount", expectedRevision: data.revision, ...(editing ? { id: editing } : {}), ...form }).then(ok => { if (ok) { setMessage(editing ? "账号已保存" : "账号已登记，可在内容中选择为目标账号。"); reset(); } });
+    {accounts.length > 0 && <div className="contentAccountToolbar">
+      <label>搜索账号<input type="search" placeholder="搜索名称、平台或备注" value={query} onChange={event => setQuery(event.target.value)} /></label>
+      <label>筛选平台<select value={platform} onChange={event => setPlatform(event.target.value)}><option value="all">全部平台</option>{Object.entries(CONTENT_PLATFORMS).map(([key, label]) => <option value={key} key={key}>{label}</option>)}</select></label>
+      <span className="contentMuted">共 {accounts.length} 个 · 已启用 {accounts.filter(account => account.enabled).length} 个</span>
+    </div>}
+    <section className="contentAccountList" aria-label="已登记账号">
+      {data && accounts.length === 0 && <div className="contentAccountEmpty"><h3>还没有账号</h3><p>选择平台后扫码登录，B站昵称与主页将自动读取。</p><IslandButton type="primary" onClick={() => openForm()}>登记第一个账号</IslandButton></div>}
+      {accounts.length > 0 && matching.length === 0 && <div className="contentAccountEmpty"><p>没有符合筛选条件的账号</p><IslandButton onClick={() => { setQuery(""); setPlatform("all"); }}>清除筛选</IslandButton></div>}
+      {accounts.map(account => <article className="contentAccountRow" key={account.id} hidden={!matching.includes(account)} aria-label={account.name}>
+        <header className="contentAccountHeading">
+          <div><h3>{account.name}</h3><p className="contentMuted">{CONTENT_PLATFORMS[account.platform]} · {account.enabled ? "已启用" : "已停用"}</p></div>
+          <IslandButton size="small" disabled={busy} onClick={() => openForm(account)}>编辑账号</IslandButton>
+        </header>
+        {account.platform === "bilibili" && api.connectBilibili
+          ? <BilibiliConnection account={account} connect={api.connectBilibili} refreshKey={refreshKey} />
+          : <div className="contentAccountUnconnected"><IslandTag size="small" color="brown" variant="soft">已登记 · 未连接平台</IslandTag><p className="contentMuted">可选择为投放目标，发布结果需手动登记。</p></div>}
+        {(account.homepage || account.notes) && <footer className="contentAccountMeta">{account.notes && <p>{account.notes}</p>}{account.homepage && <a href={account.homepage} target="_blank" rel="noreferrer">查看主页</a>}</footer>}
+      </article>)}
+    </section>
+    <IslandModal open={formOpen} title={editing ? "编辑账号" : newConnection ? "连接B站" : "新增账号"} width={newConnection ? 680 : 520} footer={null} maskClosable={false} onClose={closeForm}>
+      <div data-plugin="dsh-azu-creator">{newConnection ? <div className="contentManager">
+        <p className="contentMuted">扫码确认后自动添加账号，无需填写账号名称或密码。</p>
+        {connectionError && <p role="alert">{connectionError}</p>}
+        <BilibiliConnection account={{ id: newConnection.connection.accountId, name: "新账号", platform: "bilibili", enabled: true, homepage: "", notes: "", updatedAt: "" }} connect={api.connectBilibili!} onConnected={result => {
+          setNewConnection(null); setFormOpen(false); setQuery(""); setPlatform("all");
+          setMessage(`已添加B站账号：${result.connection.identity?.name ?? "已核验账号"}`); void run({ action: "get" });
+        }} />
+        <div className="contentActions contentFormFooter"><IslandButton disabled={connectingNew} onClick={closeForm}>{connectingNew ? "关闭中…" : "关闭"}</IslandButton></div>
+      </div> : <form className="contentManager contentForm contentAccountForm" aria-label={editing ? "编辑账号" : "新增账号"} aria-busy={busy} onSubmit={event => {
+        event.preventDefault(); if (!data || busy || connectingNew) return;
+        if (scanFirst) { void beginConnection(); return; }
+        void run({ action: "saveAccount", expectedRevision: data.revision, ...(editing ? { id: editing } : {}), ...form }).then(ok => {
+          if (ok) { setMessage(editing ? "账号已保存" : form.platform === "bilibili" ? "账号已登记，点击“连接B站”完成扫码登录。" : "账号已登记，可在内容中选择为目标账号。"); setFormOpen(false); setQuery(""); setPlatform("all"); }
+        });
       }}>
-        <h3>{editing ? "编辑账号" : "新增账号"}</h3>
-        <label>所属平台<select disabled={busy || !!editing} value={form.platform} onChange={event => setForm({ ...form, platform: event.target.value as ContentAccount["platform"] })}>{Object.entries(CONTENT_PLATFORMS).map(([key, label]) => <option value={key} key={key}>{label}</option>)}</select></label>
-        <label>账号名称<input required maxLength={80} disabled={busy} value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} placeholder="例如：品牌主账号" /></label>
+        {error && <div role="alert"><p>{error}</p><IslandButton size="small" disabled={busy} onClick={() => { void run({ action: "get" }); }}>重新读取账号列表</IslandButton></div>}
+        <label>所属平台<select disabled={busy || connectingNew || !!editing} value={form.platform} onChange={event => setForm({ ...form, platform: event.target.value as ContentAccount["platform"] })}>{Object.entries(CONTENT_PLATFORMS).map(([key, label]) => <option value={key} key={key}>{label}</option>)}</select></label>
+        <p className="contentMuted">{editing ? "平台不可修改。如需其他平台，请新增账号。" : form.platform === "bilibili" ? "扫码登录后自动读取昵称与主页，不需要填写账号名称或密码。" : "此平台暂支持本地登记，尚未接入真实登录。"}</p>
+        {connectionError && <p role="alert">{connectionError}</p>}
+        {!scanFirst && <><label>账号名称<input required maxLength={80} disabled={busy} value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} placeholder="例如：我的B站账号" /></label>
         <label>主页链接（选填）<input type="url" maxLength={2048} disabled={busy} value={form.homepage} onChange={event => setForm({ ...form, homepage: event.target.value })} placeholder="https://…" /></label>
         <label>备注（选填）<textarea maxLength={2000} rows={3} disabled={busy} value={form.notes} onChange={event => setForm({ ...form, notes: event.target.value })} /></label>
         <label className="contentCheck"><input type="checkbox" disabled={busy} checked={form.enabled} onChange={event => setForm({ ...form, enabled: event.target.checked })} />启用账号</label>
-        <p className="contentMuted">停用后不能再选为新的投放目标，历史记录会保留。</p>
-        <div className="contentActions"><IslandButton type="primary" htmlType="submit" disabled={busy || !data || !form.name.trim()}>{busy ? "保存中…" : "保存账号"}</IslandButton>{editing && <IslandButton disabled={busy} onClick={reset}>取消编辑</IslandButton>}</div>
-      </form>
-    </div>
+        <p className="contentMuted">停用后无法新增投放或发起连接，已有绑定和发布记录会保留。</p></>}
+        {discarding && <div className="contentDiscardPrompt" role="alert" tabIndex={-1} ref={discardPrompt}><p>有未保存的修改，确定放弃吗？</p><div className="contentActions"><IslandButton size="small" disabled={busy} onClick={() => setDiscarding(false)}>继续编辑</IslandButton><IslandButton size="small" disabled={busy} onClick={() => { setFormOpen(false); setDiscarding(false); }}>放弃修改</IslandButton></div></div>}
+        <div className="contentActions contentFormFooter"><IslandButton disabled={busy || connectingNew} onClick={closeForm}>取消</IslandButton><IslandButton type="primary" htmlType="submit" disabled={busy || connectingNew || !data || (scanFirst ? !api.connectBilibili : !form.name.trim())}>{connectingNew ? "正在获取二维码…" : scanFirst ? "扫码登录" : busy ? "保存中…" : "保存账号"}</IslandButton></div>
+      </form>}</div>
+    </IslandModal>
   </section>;
 }
 

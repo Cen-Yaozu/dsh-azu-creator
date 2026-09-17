@@ -1,3 +1,4 @@
+import type { BilibiliIdentity } from "./bilibiliConnectionSchemas.ts";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -25,21 +26,7 @@ export class ContentAccountsService {
     const request = contentAccountRequestSchema.parse(input);
     signal.throwIfAborted();
     if (request.action === "get") return this.read();
-    await mkdir(this.dataDir, { recursive: true });
-    const lock = `${this.file}.lock`;
-    let locked = false;
-    for (let attempt = 0; attempt < 50; attempt++) {
-      signal.throwIfAborted();
-      try { await mkdir(lock); locked = true; break; }
-      catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-        await new Promise(resolve => setTimeout(resolve, 20));
-      }
-    }
-    if (!locked) throw new Error("账号记录正在保存，请稍后重试。");
-    const temporary = `${this.file}.${randomUUID()}.tmp`;
-    try {
-      const state = await this.read();
+    return this.update(async state => {
       if (state.revision !== request.expectedRevision) throw new Error("账号或发布记录已更新，请重新读取后再保存。");
       const now = new Date().toISOString();
       if (request.action === "saveAccount") {
@@ -79,6 +66,39 @@ export class ContentAccountsService {
           row.updatedAt = now;
         }
       }
+    }, signal);
+  }
+
+  /** Called only after the platform adapter has verified a real identity. */
+  async registerBilibili(id: string, identity: BilibiliIdentity, signal: AbortSignal): Promise<void> {
+    await this.update(async state => {
+      const previous = state.accounts.find(account => account.id === id);
+      if (previous) {
+        if (previous.platform !== "bilibili") throw new Error("账号平台不匹配。");
+        return;
+      }
+      state.accounts.push({ id, platform: "bilibili", name: identity.name.slice(0, 80),
+        homepage: `https://space.bilibili.com/${identity.mid}`, notes: "", enabled: true, updatedAt: new Date().toISOString() });
+    }, signal);
+  }
+
+  private async update(change: (state: ContentAccountSnapshot) => Promise<void>, signal: AbortSignal): Promise<ContentAccountSnapshot> {
+    await mkdir(this.dataDir, { recursive: true });
+    const lock = `${this.file}.lock`;
+    let locked = false;
+    for (let attempt = 0; attempt < 50; attempt++) {
+      signal.throwIfAborted();
+      try { await mkdir(lock); locked = true; break; }
+      catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+    }
+    if (!locked) throw new Error("账号记录正在保存，请稍后重试。");
+    const temporary = `${this.file}.${randomUUID()}.tmp`;
+    try {
+      const state = await this.read();
+      await change(state);
       signal.throwIfAborted();
       state.revision++;
       await writeFile(temporary, JSON.stringify(contentAccountSnapshotSchema.parse(state), null, 2) + "\n", { mode: 0o600 });

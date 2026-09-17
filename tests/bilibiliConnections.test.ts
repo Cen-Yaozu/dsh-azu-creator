@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+import { ContentAccountsService } from '../src/contentAccounts.ts';
 import { mkdtemp, readFile, writeFile, mkdir, readdir, rm, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -97,6 +99,52 @@ describe('Bilibili connection service',()=>{
   const {service,runtime,root,accounts}=await setup();await service.manage({action:'start',accountId:'a'},signal());await vi.waitFor(()=>expect(runtime.pending.length).toBe(1));await service.dispose();
   const other=new BilibiliConnectionsService(root,async()=>accounts,runtime);services.push(other);
   const state=await other.manage({action:'status',accountId:'a'},signal());expect(state.connection.state).toBe('cancelled');expect(state.connection.identity).toBeNull();expect(state.connection.qrDataUrl).toBeNull();
+ });
+});
+describe('scan-first account registration', () => {
+ async function registrationSetup() {
+  const root = await mkdtemp(join(tmpdir(), 'azu-bili-registration-')); roots.push(root);
+  const content = new ContentAccountsService(root, async () => ({stage:'draft'}));
+  const accounts = async () => (await content.manage({action:'get'},signal())).accounts;
+  const runtime = new FakeRuntime();
+  const register = vi.fn((id:string, identity:BilibiliIdentity, stop:AbortSignal) => content.registerBilibili(id,identity,stop));
+  const service = new BilibiliConnectionsService(root,accounts,runtime,register); services.push(service);
+  return {root,content,accounts,runtime,register,service};
+ }
+ it('creates an account only after real identity verification and coalesces duplicate begin requests', async () => {
+  const {accounts,runtime,service,register} = await registrationSetup();
+  const request = {action:'begin' as const,requestId:randomUUID()};
+  const first = await service.manage(request,signal()); const second = await service.manage(request,signal());
+  expect(first.connection.accountId).toBe(second.connection.accountId);
+  expect(await accounts()).toEqual([]); expect(runtime.calls).toBe(1);
+  await vi.waitFor(() => expect(runtime.pending).toHaveLength(1));
+  await runtime.complete(); const result = await settled(service,first.connection.accountId);
+  expect(result.connection.state).toBe('connected');
+  expect(await accounts()).toEqual([expect.objectContaining({id:first.connection.accountId,name:'真实昵称',homepage:'https://space.bilibili.com/100',platform:'bilibili'})]);
+  expect(register).toHaveBeenCalledTimes(1);
+  await service.manage(request,signal()); expect(runtime.calls).toBe(1);
+ });
+ it('leaves no listed account after cancellation or identity failure', async () => {
+  const {accounts,runtime,service} = await registrationSetup();
+  const first = await service.manage({action:'begin',requestId:randomUUID()},signal());
+  await service.manage({action:'cancel',accountId:first.connection.accountId},signal());
+  expect(await accounts()).toEqual([]);
+  const second = await service.manage({action:'begin',requestId:randomUUID()},signal());
+  await vi.waitFor(() => expect(runtime.pending).toHaveLength(2));
+  runtime.identityError = new Error('network failure'); await runtime.complete(1);
+  expect((await settled(service,second.connection.accountId)).connection.state).toBe('failed');
+  expect(await accounts()).toEqual([]);
+ });
+ it('recovers an interrupted registry write after restart without another scan', async () => {
+  const {root,accounts,content,runtime,service,register} = await registrationSetup();
+  register.mockRejectedValue(new Error('temporary save failure'));
+  const first = await service.manage({action:'begin',requestId:randomUUID()},signal());
+  await vi.waitFor(() => expect(runtime.pending).toHaveLength(1));
+  await runtime.complete(); await vi.waitFor(() => expect(register).toHaveBeenCalled());
+  await service.dispose(); expect(await accounts()).toEqual([]);
+  const restarted = new BilibiliConnectionsService(root,accounts,runtime,(id,identity,stop) => content.registerBilibili(id,identity,stop)); services.push(restarted);
+  expect((await restarted.manage({action:'status',accountId:first.connection.accountId},signal())).connection.state).toBe('connected');
+  expect(await accounts()).toHaveLength(1); expect(runtime.calls).toBe(1);
  });
 });
 describe('Bilibili identity reader',()=>{

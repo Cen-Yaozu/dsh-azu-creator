@@ -9,9 +9,10 @@ export const bilibiliConnectionSchema = z.object({
   qrDataUrl: z.string().nullable(),
   expiresAt: z.iso.datetime().nullable(),
 });
-export const bilibiliConnectionRequestSchema = z.object({
-  action: z.enum(['status','start','check','cancel']), accountId: z.string().min(1).max(100),
-});
+export const bilibiliConnectionRequestSchema = z.union([
+  z.object({ action: z.literal('begin'), requestId: z.uuid() }),
+  z.object({ action: z.enum(['status','start','check','cancel']), accountId: z.string().min(1).max(100) }),
+]);
 export const bilibiliConnectionResultSchema = z.object({
   runtime: z.object({ available: z.boolean(), version: z.literal('1.2.4'), message: z.string() }),
   connection: bilibiliConnectionSchema,

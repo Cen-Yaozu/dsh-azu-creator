@@ -274,7 +274,7 @@ export class MzCreatorService extends TypertRemoteService {
     this.coverSkillDirConfig = config.coverSkillDir;
     this.muzi = new MuziCreatorService(config);
     this.contentAccounts = new ContentAccountsService(this.dataDir, id => this.muzi.getProject({ id }));
-    this.bilibiliConnections = new BilibiliConnectionsService(this.dataDir, async () => (await this.contentAccounts.manage({ action: "get" }, new AbortController().signal)).accounts);
+    this.bilibiliConnections = new BilibiliConnectionsService(this.dataDir, async () => (await this.contentAccounts.manage({ action: "get" }, new AbortController().signal)).accounts, undefined, (id, identity, signal) => this.contentAccounts.registerBilibili(id, identity, signal));
     ctx.effect(() => () => this.bilibiliConnections.dispose());
     this.videoPublisher = new VideoPublisherService(config, this.dataDir, this.muzi);
     this.videoConnectionTimeoutMs = config.videoConnectionTimeoutMs ?? 600_000;

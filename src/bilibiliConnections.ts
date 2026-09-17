@@ -2,11 +2,11 @@ import { createHash, randomUUID } from 'node:crypto';
 import { chmod, lstat, mkdir, open, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod';
-import { bilibiliConnectionRequestSchema, bilibiliConnectionSchema, type BilibiliConnection, type BilibiliConnectionRequest, type BilibiliConnectionResult } from './bilibiliConnectionSchemas.ts';
+import { bilibiliConnectionRequestSchema, bilibiliConnectionSchema, type BilibiliConnection, type BilibiliConnectionRequest, type BilibiliConnectionResult, type BilibiliIdentity } from './bilibiliConnectionSchemas.ts';
 import { BilibiliLoginExpired, NativeBilibiliRuntime, type BilibiliRuntime } from './bilibiliRuntime.ts';
 import type { ContentAccount } from './contentAccountSchemas.ts';
 
-const recordSchema = z.object({ connection: bilibiliConnectionSchema.omit({ qrDataUrl: true, expiresAt: true }), credentials: z.unknown().nullable() });
+const recordSchema = z.object({ connection: bilibiliConnectionSchema.omit({ qrDataUrl: true, expiresAt: true }), credentials: z.unknown().nullable(), registration: z.boolean().default(false) });
 type RecordData = z.infer<typeof recordSchema>;
 type Session = { controller: AbortController; directory: string; run: Promise<void>; expiresAt: string; qrReady: boolean; release: () => Promise<void> };
 const activeStates = new Set(['starting','waiting_scan','verifying']);
@@ -19,7 +19,7 @@ export class BilibiliConnectionsService {
   private tail: Promise<unknown> = Promise.resolve();
   private disposed = false;
   private readonly lifetime = new AbortController();
-  constructor(dataDir: string, private readonly accounts: () => Promise<ContentAccount[]>, private readonly runtime: BilibiliRuntime = new NativeBilibiliRuntime(dataDir)) {
+  constructor(dataDir: string, private readonly accounts: () => Promise<ContentAccount[]>, private readonly runtime: BilibiliRuntime = new NativeBilibiliRuntime(dataDir), private readonly register?: (id: string, identity: BilibiliIdentity, signal: AbortSignal) => Promise<void>) {
     this.root = join(dataDir, 'platform-connections', 'bilibili');
   }
   private serial<T>(operation: () => Promise<T>): Promise<T> {
@@ -28,6 +28,7 @@ export class BilibiliConnectionsService {
   private directory(accountId: string) { return join(this.root, createHash('sha256').update(accountId).digest('hex')); }
   private async account(id: string) {
     const account = (await this.accounts()).find(row => row.id === id);
+    if (!account && (await this.read(id)).registration) return { id, platform: 'bilibili' as const, enabled: true };
     if (!account || account.platform !== 'bilibili') throw new Error('请选择已登记的B站账号。');
     return account;
   }
@@ -47,7 +48,7 @@ export class BilibiliConnectionsService {
       if (record.connection.accountId !== id) throw new Error('identity mismatch');
       return record;
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') { const {qrDataUrl,expiresAt,...connection} = initial(id); return { connection, credentials:null }; }
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') { const {qrDataUrl,expiresAt,...connection} = initial(id); return { connection, credentials:null, registration:false }; }
       throw new Error('B站连接记录不可读，原凭据未被覆盖。');
     }
   }
@@ -75,8 +76,19 @@ export class BilibiliConnectionsService {
     }
     throw new Error('无法锁定此账号，请稍后重试。');
   }
+  private async completeRegistration(id: string, record: RecordData) {
+    if (!record.registration || !record.credentials || !record.connection.identity) return;
+    if (!this.register) throw new Error('账号自动保存尚未就绪。');
+    await this.register(id, record.connection.identity, this.lifetime.signal);
+    record.registration = false;
+    record.connection.state = 'connected';
+    record.connection.message = '已连接B站，账号信息已自动保存。';
+    await this.write(id, record);
+  }
   private async response(id: string): Promise<BilibiliConnectionResult> {
     const record = await this.read(id);
+    // Finish an interrupted registry write without requesting another scan.
+    await this.completeRegistration(id, record);
     const session = this.sessions.get(id);
     const connection: BilibiliConnection = { ...record.connection,qrDataUrl:null,expiresAt:null };
     if (session) {
@@ -95,9 +107,17 @@ export class BilibiliConnectionsService {
     return { runtime: await this.runtime.inspect(), connection };
   }
   async manage(input: BilibiliConnectionRequest, signal: AbortSignal) {
-    const request = bilibiliConnectionRequestSchema.parse(input);
     return this.serial(async () => {
+      let request = bilibiliConnectionRequestSchema.parse(input);
       signal.throwIfAborted(); if(this.disposed) throw new Error('服务正在退出，请稍后重试。');
+      if (request.action === 'begin') {
+        if (!this.register) throw new Error('账号自动保存尚未就绪，请更新后台。');
+        const id = `bili-${request.requestId}`;
+        const record = await this.read(id);
+        if (record.credentials || (await this.accounts()).some(account => account.id === id)) return this.response(id);
+        if (!record.registration) { record.registration = true; await this.write(id, record); }
+        request = { action: 'start', accountId: id };
+      }
       const account = await this.account(request.accountId);
       const id=account.id;
       if(request.action==='status') return this.response(id);
@@ -173,6 +193,7 @@ export class BilibiliConnectionsService {
         }
       }
       await this.write(id,record);
+      await this.completeRegistration(id, record);
     } catch(error) {
       const record=await this.read(id);
       record.connection.state='failed';record.connection.message=error instanceof Error && error.message==='duplicate'?'该B站身份已绑定其他本地账号，请使用已有账号。':'未能核验账号身份，未替换原凭据，请重新连接。';
