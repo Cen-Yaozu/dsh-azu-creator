@@ -45,8 +45,8 @@ export class ContentAccountsService {
       if (request.action === "saveAccount") {
         const previous = state.accounts.find(account => account.id === request.id);
         if (request.id && !previous) throw new Error("账号不存在，请重新读取。");
-        if (previous && previous.platform !== request.platform && state.publications.some(row => row.accountId === previous.id)) {
-          throw new Error("账号已关联内容，不能修改所属平台，请新增账号。");
+        if (previous && previous.platform !== request.platform) {
+          throw new Error("已登记账号不能修改所属平台，请新增账号。");
         }
         const { name, platform, homepage, notes, enabled } = request;
         const account = { id: previous?.id ?? randomUUID(), name, platform, homepage, notes, enabled, updatedAt: now };

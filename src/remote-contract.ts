@@ -1,3 +1,4 @@
+import { bilibiliConnectionRequestSchema, bilibiliConnectionResultSchema } from "./bilibiliConnectionSchemas.ts";
 import { contentAccountRequestSchema, contentAccountSnapshotSchema } from "./contentAccountSchemas.ts";
 import type { InvocationDescriptor } from "@deepseek-ai/dsh-typert-protocol";
 import { z } from "zod";
@@ -162,6 +163,7 @@ export const AZU_CREATOR_INVOCATIONS: readonly InvocationDescriptor[] = [
   invocation("getVideoPlayback", idRequestSchema, videoPlaybackResultSchema),
   invocation("getArticleMedia", idRequestSchema, articleMediaResultSchema),
   invocation("getSubtitleText", idRequestSchema, subtitleTextResultSchema),
+  invocation("manageBilibiliConnection", bilibiliConnectionRequestSchema, bilibiliConnectionResultSchema),
   invocation("manageContentAccounts", contentAccountRequestSchema, contentAccountSnapshotSchema),
   invocation("getVideoAccounts", emptyObjectSchema, videoAccountManagementSchema),
   invocation("addVideoAccount", addVideoAccountSchema, videoAccountManagementSchema),

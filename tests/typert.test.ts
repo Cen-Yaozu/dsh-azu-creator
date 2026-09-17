@@ -19,6 +19,7 @@ describe("handwritten TYPERT", () => {
       "getVideoPlayback",
       "getArticleMedia",
       "getSubtitleText",
+      "manageBilibiliConnection",
       "manageContentAccounts",
       "getVideoAccounts",
       "addVideoAccount",

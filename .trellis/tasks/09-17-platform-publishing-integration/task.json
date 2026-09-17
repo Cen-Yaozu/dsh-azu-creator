@@ -1,0 +1,92 @@
+{
+  "id": "platform-publishing-integration",
+  "name": "platform-publishing-integration",
+  "title": "B站与视频号真实账号及发布接入",
+  "description": "复用开源上传能力，将本地账号登记和内容管理接到真实平台；先完成 B 站登录、投稿和结果回读，再接入视频号。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "content-publishing",
+  "package": "dsh-azu-creator",
+  "priority": "P1",
+  "creator": "Cen-Yaozu",
+  "assignee": null,
+  "createdAt": "2026-09-17",
+  "completedAt": null,
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "current_phase": 2,
+  "next_action": [
+    {
+      "phase": 1,
+      "action": "核对固定依赖版本、许可证与平台适配契约"
+    },
+    {
+      "phase": 2,
+      "action": "完成 B 站真实账号连接与身份回读"
+    },
+    {
+      "phase": 3,
+      "action": "完成 B 站投稿、状态与作品链接回读"
+    },
+    {
+      "phase": 4,
+      "action": "完成视频号登录、草稿、提交及结果核验"
+    },
+    {
+      "phase": 5,
+      "action": "完成重启恢复、桌面验收和部署记录"
+    }
+  ],
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "src/contentAccountSchemas.ts",
+    "src/contentAccounts.ts",
+    "src/client/ContentAccounts.tsx",
+    "src/client/ContentProjectEditor.tsx",
+    "src/client/workbench/AzuWorkbenchRoot.tsx",
+    "src/service.ts",
+    "src/remote-contract.ts",
+    "src/client/face.ts",
+    "src/client/index.tsx",
+    "src/videoPublisher.ts",
+    "src/videoAccounts.ts",
+    "src/publishFlow.ts",
+    "scripts/service-daemon.mjs",
+    "docs/content-management.md",
+    "tests/contentAccounts.test.ts",
+    "tests/contentManagement.dom.test.tsx",
+    "src/bilibiliConnections.ts",
+    "src/bilibiliRuntime.ts",
+    "src/bilibiliConnectionSchemas.ts",
+    "src/client/BilibiliConnection.tsx",
+    "scripts/bilibili-login.py",
+    "scripts/install-biliup.mjs",
+    "tests/bilibiliConnections.test.ts",
+    "tests/bilibiliConnection.dom.test.tsx"
+  ],
+  "notes": "2026-09-18 用户授权开始实施。本轮 B 站账号连接，投稿和视频号仍未开始。",
+  "meta": {
+    "planning_only": false,
+    "baseline_commit": "abad0a0107aa031dfacbf9d3d4d1eb55431faf37",
+    "platform_order": [
+      "bilibili",
+      "wechat_channels"
+    ],
+    "source_candidate": {
+      "repository": "https://github.com/dreammis/social-auto-upload",
+      "reviewed_commit": "0012d2c355f88f683cc38dde2a2db209e14091bc"
+    },
+    "implementation_started": true,
+    "documents": [
+      "prd.md",
+      "design.md",
+      "implement.md",
+      "validation.md"
+    ]
+  }
+}

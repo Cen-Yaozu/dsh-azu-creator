@@ -10,3 +10,7 @@ design-qa-assets/
 .impeccable/mocks/*.png
 dist/
 
+
+# Local platform runtime and private login state
+platform-connections/
+platform-runtime/

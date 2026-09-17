@@ -21,3 +21,8 @@ SIL Open Font License 1.1. Their copyright notices and license texts are
 included in src/client/appearance/assets/fonts/OFL.txt and
 src/client/appearance/assets/fonts/OFL-NotoSansSC.txt. File provenance and
 SHA-256 hashes are recorded in that directory's manifest.json.
+
+Bilibili connection integration uses an optional external biliup v1.2.4 runtime.
+Source: https://github.com/biliup/biliup/releases/tag/v1.2.4
+Copyright (c) 2019 ForgQi. See docs/bilibili-connection.md for the MIT license text
+and the unresolved README usage restriction. Runtime binaries are not bundled.

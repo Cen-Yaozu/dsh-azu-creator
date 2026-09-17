@@ -1,3 +1,5 @@
+import { BilibiliConnectionsService } from "./bilibiliConnections.ts";
+import type { BilibiliConnectionRequest } from "./bilibiliConnectionSchemas.ts";
 import { ContentAccountsService } from "./contentAccounts.ts";
 import type { ContentAccountRequest } from "./contentAccountSchemas.ts";
 import { runVideoAccounts } from "./videoAccounts.ts";
@@ -244,6 +246,7 @@ export class MzCreatorService extends TypertRemoteService {
   previews = new Map<string, { url: string; port: number; pid: number }>();
   videos = new Map<string, { url: string; path: string; close: () => void }>();
   articles = new Map<string, { origin: string; root: string; close: () => void }>();
+  readonly bilibiliConnections: BilibiliConnectionsService;
   readonly contentAccounts: ContentAccountsService;
   readonly muzi: MuziCreatorService;
   readonly videoPublisher: VideoPublisherService;
@@ -271,6 +274,8 @@ export class MzCreatorService extends TypertRemoteService {
     this.coverSkillDirConfig = config.coverSkillDir;
     this.muzi = new MuziCreatorService(config);
     this.contentAccounts = new ContentAccountsService(this.dataDir, id => this.muzi.getProject({ id }));
+    this.bilibiliConnections = new BilibiliConnectionsService(this.dataDir, async () => (await this.contentAccounts.manage({ action: "get" }, new AbortController().signal)).accounts);
+    ctx.effect(() => () => this.bilibiliConnections.dispose());
     this.videoPublisher = new VideoPublisherService(config, this.dataDir, this.muzi);
     this.videoConnectionTimeoutMs = config.videoConnectionTimeoutMs ?? 600_000;
     this.videoConnectionPollIntervalMs = config.videoConnectionPollIntervalMs ?? 2000;
@@ -297,6 +302,10 @@ export class MzCreatorService extends TypertRemoteService {
       this.inspiration.dispose();
       await this.stopServers();
     }, "mz-creator: library watch");
+  }
+
+  async manageBilibiliConnection(request: BilibiliConnectionRequest, signal: AbortSignal) {
+    return this.bilibiliConnections.manage(request, signal);
   }
 
   async manageContentAccounts(request: ContentAccountRequest, signal: AbortSignal) {

@@ -46,7 +46,9 @@
     "LICENSE",
     "src/client/appearance/assets/fonts/OFL*.txt",
     "src/client/appearance/assets/fonts/manifest.json",
-    "src/client/appearance/assets/icons/manifest.json"
+    "src/client/appearance/assets/icons/manifest.json",
+    "scripts/bilibili-login.py",
+    "scripts/install-biliup.mjs"
   ],
   "dsh": {
     "bundle": {
@@ -91,7 +93,8 @@
     "service:status": "node scripts/service-daemon.mjs status",
     "service:logs": "node scripts/service-daemon.mjs logs",
     "app:build": "node scripts/build-macos-app.mjs",
-    "app:open": "open ~/Applications/'Azu Creator.app'"
+    "app:open": "open ~/Applications/'Azu Creator.app'",
+    "bilibili:install": "node scripts/install-biliup.mjs"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "3.18.1",

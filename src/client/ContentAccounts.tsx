@@ -1,3 +1,4 @@
+import { BilibiliConnection } from "./BilibiliConnection.tsx";
 import { useEffect, useRef, useState } from "react";
 import {
   CONTENT_PLATFORMS, type ContentAccount, type ContentAccountFace, type ContentAccountRequest,
@@ -41,7 +42,7 @@ export function ContentAccountManager({ api }: { api: ContentAccountFace }) {
   const [message, setMessage] = useState("");
   const reset = () => { setEditing(null); setForm(blank()); };
   return <section className="contentManager" aria-label="本地账号管理">
-    <header className="contentManagerHeader"><div><h2>账号管理</h2><p>登记内容投放账号，管理各账号的发布记录。平台登录与自动发布尚未接入。</p></div><IslandButton disabled={busy} onClick={() => { void run({ action: "get" }); }}>重新读取</IslandButton></header>
+    <header className="contentManagerHeader"><div><h2>账号管理</h2><p>登记内容投放账号，管理各账号的发布记录。B站支持扫码连接与身份检查；自动发布尚未接入。</p></div><IslandButton disabled={busy} onClick={() => { void run({ action: "get" }); }}>重新读取</IslandButton></header>
     {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
     {data === null && !error && <p role="status">正在读取账号…</p>}
     <div className="contentAccountLayout">
@@ -49,7 +50,9 @@ export function ContentAccountManager({ api }: { api: ContentAccountFace }) {
         {data?.accounts.length === 0 && <p className="contentMuted">还没有账号，从右侧登记第一个账号。</p>}
         {data?.accounts.map(account => <article className="contentAccountRow" key={account.id}>
           <div><strong>{account.name}</strong><p>{CONTENT_PLATFORMS[account.platform]} · {account.enabled ? "已启用" : "已停用"}</p>
-            <IslandTag size="small" color="brown" variant="soft">已登记 · 未连接平台</IslandTag>
+            {account.platform === "bilibili" && api.connectBilibili
+              ? <BilibiliConnection account={account} connect={api.connectBilibili} />
+              : <IslandTag size="small" color="brown" variant="soft">已登记 · 未连接平台</IslandTag>}
             {account.homepage && <p><a href={account.homepage} target="_blank" rel="noreferrer">查看主页</a></p>}
             {account.notes && <p className="contentMuted">{account.notes}</p>}
           </div>

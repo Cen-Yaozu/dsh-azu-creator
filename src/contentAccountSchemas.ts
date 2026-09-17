@@ -1,3 +1,4 @@
+import type { BilibiliConnectionRequest, BilibiliConnectionResult } from "./bilibiliConnectionSchemas.ts";
 import { z } from "zod";
 
 export const CONTENT_PLATFORMS = {
@@ -35,5 +36,6 @@ export type ContentPublication = z.infer<typeof contentPublicationSchema>;
 export type ContentAccountSnapshot = z.infer<typeof contentAccountSnapshotSchema>;
 export type ContentAccountRequest = z.infer<typeof contentAccountRequestSchema>;
 export interface ContentAccountFace {
+  connectBilibili?: (request: BilibiliConnectionRequest) => Promise<BilibiliConnectionResult>;
   manage: (request: ContentAccountRequest) => Promise<ContentAccountSnapshot>;
 }
